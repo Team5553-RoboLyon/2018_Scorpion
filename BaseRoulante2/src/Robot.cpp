@@ -9,7 +9,7 @@
 #include "WPILib.h"
 #include <thread>
 
-class Robot : public frc:: IterativeRobot {
+class Robot : public frc::IterativeRobot {
 
 public:
 	void RobotInit()
@@ -30,7 +30,9 @@ public:
 		CameraServer::GetInstance()->SetSize(0);
 	}
 
-	void DisabledInit() {}
+	void DisabledInit()
+	{
+	}
 
 	void DisabledPeriodic()
 	{
@@ -49,7 +51,7 @@ public:
 
 				if(toursGauche > toursPrevusGauche || toursGauche < -toursPrevusGauche)
 				{
-					RampeGarice(0.5);
+					RampeMoteur(0.5);
 				}
 				else
 				{
@@ -67,7 +69,7 @@ public:
 
 						if(toursDroit < toursPrevusDroit || toursDroit > -toursPrevusDroit)
 						{
-							RampeGarice(0.2);
+							RampeMoteur(0.2);
 						}
 						else
 						{
@@ -99,7 +101,7 @@ public:
 	{
 	}
 
-	void RampeGarice(double vitesse)
+	void RampeMoteur(double vitesse)
 	{
 		static double consignePrecedente=0;
 		double vitesseReele;
