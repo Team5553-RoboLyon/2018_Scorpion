@@ -104,7 +104,7 @@ public:
 	void RampeMoteur(double vitesse)
 	{
 		static double consignePrecedente=0;
-		double vitesseReele;
+		double vitesseReele//=EncodeurGauche.Get();
 		if(vitesse>vitesseReele)
 		{
 			for (vitesseReele = consignePrecedente ; vitesseReele < vitesse ; vitesseReele += 0.000005)
