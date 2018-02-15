@@ -5,8 +5,10 @@
  *      Author: REBAUDET Thomas
  */
 
+#include <iostream>
 #include <Pince.h>
 #include <VictorSP.h>
+#include <PWMVictorSPX.h>
 #include "WPILib.h"
 #include <DigitalInput.h>
 #include <Joystick.h>
@@ -15,62 +17,84 @@
 
 namespace std {
 
-Pince::Pince() {
-	bras = new PWMVictorSPX(7);
-	pelleteuse = new PWMVictorSPX(8);
-	servo = new Servo(10);
-	Joystick1 = new Joystick(0);
-	bras->Set(0.0);
-	pelleteuse->Set(0.0);
-
-	// TODO Auto-generated constructor stub
-
-}
-void Pince::attraperCube()
+Pince::Pince()
 {
-	if(incrementation >= 1 && incrementation<=500 )
-			{
-			bras->Set(0.5);
-			incrementation += 1;
-			}
-	if (incrementation == 500)
-			{
-			incrementation = 0;
-			}
-}
-void Pince::lacherCube()
-{
-	if(incrementation <= 500)
-			{
-			bras->Set(-0.2);
-			incrementation += 1;
+	Bras = new PWMVictorSPX(7);
+	Bras->Set(0);
 
-			}
-	if (incrementation == 2)
-		{
-		incrementation = 0;
-		}
-}
-void Pince::leverPince(Joystick* Joystick1, Servo* servo, DigitalInput* limitSwitch)
-{
+	Bag = new PWMVictorSPX(8);
+	Bag->Set(0);
 
+	AntiRetour = new Servo(10);
+	Switch = new DigitalInput(9);
 }
-void Pince::descendrePince(Joystick* Joystick1, Servo* servo, DigitalInput* limitSwitch)
-{
-	servo -> SetAngle (45);
 
-	while(limitSwitch->Get()==false)
+void Pince::attraperCube(bool boutonPresse)
+{
+	if(boutonPresse == true)
 	{
-		pelleteuse->Set(-0.2);
+		Bras->Set(-vitesserotation);
+		incrementationAspiration = 0;
+	}
+	else if(incrementationAspiration < dureeAspiration)
+	{
+		Bras->Set(-vitesserotation);
+	}
+	else if (incrementationAspiration == dureeAspiration)
+	{
+		Bras->Set(0);
+	}
+	incrementationAspiration += 1;
+}
+
+void Pince::ejecterCube(bool boutonPresse)
+{
+	if(boutonPresse == true)
+	{
+		Bras->Set(vitesserotation);
+		incrementationEjection = 0;
+	}
+	else if(incrementationEjection < dureeEjection)
+	{
+		Bras->Set(vitesserotation);
+	}
+	else if (incrementationEjection == dureeEjection)
+	{
+		Bras->Set(0);
 	}
 
-	servo -> SetAngle (0);
-	pelleteuse -> Set (0.0);
+	incrementationEjection += 1;
+}
+
+void Pince::leverPince()
+{
 
 }
 
-Pince::~Pince() {
-	// TODO Auto-generated destructor stub
+void Pince::descendrePinceDebutMatch()
+{
+	AntiRetour->SetAngle (0);
+
+	while(Switch->Get()==false)
+	{
+		Bag->Set(-0.2);
+	}
+
+	AntiRetour->SetAngle (90);
+	Bag->Set (0);
 }
 
-} /* namespace std t'es moche*/
+void Pince::descendrePinceFinMatch()
+{
+
+}
+
+Pince::~Pince()
+{
+	delete Bras;
+	delete Bag;
+	delete AntiRetour;
+	delete Switch;
+}
+
+}

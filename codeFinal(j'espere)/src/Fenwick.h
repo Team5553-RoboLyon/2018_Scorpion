@@ -19,25 +19,27 @@ namespace std {
 
 class Fenwick {
 public:
-			VictorSP* fenwick1;
-			VictorSP* fenwick2;
-			VictorSP* fenwick3;
-			//Servo* servo;
-			Encoder* anCo2z;
-			bool pov=false;
-			bool etatFenwick = true;
-			int uneCertaineValeur = 0;
-			DoubleSolenoid* shifter;
-			void ajustementFenwick(Joystick*, Encoder*,Encoder*);
-			void deplacerFenwick(double consigne);
-			void positionFenwick(Encoder*,Encoder*,double);
-			void stabilisationFenwick(Encoder* ,Encoder*, Joystick*);
-			void monterDuRobot(Joystick*, Encoder*,Encoder*,Servo*);
-			void shifting(Joystick*);
-			void afficherPosition();
-			double sommeAllErreurs = 0;
+	VictorSP* fenwick1;
+	VictorSP* fenwick2;
+	VictorSP* fenwick3;
+	//Servo* servo;
+	Encoder* anCo2z;
+	DoubleSolenoid* shifter;
+
+	bool pov=false;
+	bool etatFenwick = true;
+	int uneCertaineValeur = 0;
+	void ajustementFenwick(Joystick*, Encoder*,Encoder*);
+	void deplacerFenwick(double consigne);
+	void positionFenwick(Encoder*,Encoder*,double);
+	void stabilisationFenwick(Encoder* ,Encoder*, Joystick*);
+	void monterDuRobot(Joystick*, Encoder*,Encoder*,Servo*);
+	void shifting(Joystick*);
+	void afficherPosition();
+	double sommeAllErreurs = 0;
 	Fenwick();
 	virtual ~Fenwick();
+
 private:
 	double consigne/*en cm*/, position/*en cm*/, erreur;
 	double P = 0.023;

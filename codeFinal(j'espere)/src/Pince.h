@@ -8,29 +8,40 @@
 #ifndef SRC_PINCE_H_
 #define SRC_PINCE_H_
 #include <VictorSP.h>
+#include <PWMVictorSPX.h>
 #include "WPILib.h"
 #include <DigitalInput.h>
 #include <Joystick.h>
 #include <Encoder.h>
 #include <Servo.h>
+
 namespace std {
 
 class Pince {
 public:
-	PWMVictorSPX* bras;
-	PWMVictorSPX* pelleteuse;
-	Servo* servo;
-	Joystick* Joystick1;
-	void attraperCube();
-	void lacherCube();
-	void leverPince(Joystick* , Servo*, DigitalInput*);
-    void descendrePince(Joystick* , Servo*, DigitalInput*);
-    int incrementation = 0;
-
 	Pince();
 	virtual ~Pince();
+
+	void attraperCube(bool boutonPresse);
+	void ejecterCube(bool boutonPresse);
+	void leverPince();
+    void descendrePinceDebutMatch();
+    void descendrePinceFinMatch();
+
+private:
+	PWMVictorSPX* Bras;
+	PWMVictorSPX* Bag;
+	Servo* AntiRetour;
+	DigitalInput* Switch;
+
+	const double vitesserotation = 0.5;
+	const int dureeAspiration = 30;
+	const int dureeEjection = 10;
+
+    int incrementationAspiration = dureeAspiration;
+    int incrementationEjection = dureeEjection;
 };
 
-} /* namespace std */
+}
 
 #endif /* SRC_PINCE_H_ */

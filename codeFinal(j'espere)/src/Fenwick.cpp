@@ -134,9 +134,9 @@ void Fenwick::deplacerFenwick(double consigne)
 	sommeAllErreurs += erreur;
 	differenceErreurs = erreurPrecedente - erreur;
 	puissanceMoteur= (P * erreur/*+ I * sommeAllErreurs + D * differenceErreurs*/);
-			fenwick1->Set(puissanceMoteur);
-			fenwick2->Set(puissanceMoteur);
-			fenwick3->Set(puissanceMoteur);
+	fenwick1->Set(puissanceMoteur);
+	fenwick2->Set(puissanceMoteur);
+	fenwick3->Set(puissanceMoteur);
 	erreurPrecedente = erreur;
 
 
