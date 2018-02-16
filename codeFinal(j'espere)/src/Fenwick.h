@@ -22,13 +22,14 @@ public:
 			VictorSP* fenwick1;
 			VictorSP* fenwick2;
 			VictorSP* fenwick3;
+			Joystick* joystick;
 			//Servo* servo;
 			Encoder* anCo2z;
 			bool pov=false;
 			bool etatFenwick = true;
 			int uneCertaineValeur = 0;
 			DoubleSolenoid* shifter;
-			void ajustementFenwick(Joystick*, Encoder*,Encoder*);
+			void ajustementFenwick();
 			void deplacerFenwick(double consigne);
 			void positionFenwick(Encoder*,Encoder*,double);
 			void stabilisationFenwick(Encoder* ,Encoder*, Joystick*);
@@ -40,7 +41,7 @@ public:
 	virtual ~Fenwick();
 private:
 	double consigne/*en cm*/, position/*en cm*/, erreur;
-	double P = 0.023;
+	double P = 0.020;
 	double I = 0;
 	double D = 0;
 

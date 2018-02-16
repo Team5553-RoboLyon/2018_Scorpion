@@ -52,42 +52,11 @@ while((encodeur1->Get() + encodeur2->Get()) / 2 <= position)
 
 
 }
-void Fenwick::ajustementFenwick(Joystick* Joystick1, Encoder* encodeur, Encoder* encodeur2)
-{
-double POV = Joystick1->GetPOV();
-double distanceQuOnVeut/*en cm*/, distanceQuOnA/*en cm*/, distanceRestante;
- distanceQuOnA = ((encodeur->Get()+encodeur2->Get())/2)/7.5;
-distanceRestante = (distanceQuOnVeut-distanceQuOnA)/distanceQuOnVeut;
-if(distanceRestante<=0.2)
-{	fenwick1->Set(0.4);
-		fenwick2->Set(0.4);
-		fenwick3->Set(0.4);
-}
-if(POV)
+void Fenwick::ajustementFenwick()
 {
 
-	fenwick1->Set(POV);
-	fenwick2->Set(POV);
-	fenwick3->Set(POV);
-//pov = true;
-
-//servo->SetAngle(-uneCertaineValeur);
-
-/*if(servo->GetAngle()<0)
-{
-	servo->SetAngle(0);
-}
-*/
-}
 
 
-
-/*if(pov == false)
-{
-	servo->SetAngle(uneCertaineValeur);
-}
-
-	SmartDashboard::PutNumber("DB/Slider 2",POV);*/
 }
 void Fenwick::stabilisationFenwick(Encoder* encodeur1,Encoder*encodeur2, Joystick* joystick)
 {
