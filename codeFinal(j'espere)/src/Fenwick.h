@@ -42,9 +42,9 @@ public:
 
 private:
 	double consigne/*en cm*/, position/*en cm*/, erreur;
-	double P = 0.023;
-	double I = 0;
-	double D = 0;
+	double kP = 0.023;
+	double kI = 0;
+	double kD = 0;
 
 	double differenceErreurs = 0;
 	double puissanceMoteur = 0;

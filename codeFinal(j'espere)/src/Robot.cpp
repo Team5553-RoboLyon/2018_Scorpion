@@ -29,6 +29,7 @@
 #include <PWMVictorSPX.h>
 #include <Fenwick.h>
 #include <Pince.h>
+#include <Base.h>
 #include <DigitalInput.h>
 
 #include <IterativeRobot.h>

@@ -11,7 +11,6 @@
 #include <PWMVictorSPX.h>
 #include "WPILib.h"
 #include <DigitalInput.h>
-#include <Joystick.h>
 #include <Encoder.h>
 #include <Servo.h>
 
