@@ -31,6 +31,7 @@
 #include <Pince.h>
 #include <Base.h>
 #include <DigitalInput.h>
+#include "Base.h"
 
 #include <IterativeRobot.h>
 #include <LiveWindow/LiveWindow.h>
@@ -41,16 +42,26 @@ class Robot: public frc::IterativeRobot
 {
 public:
 	Joystick* Joystick1;
+<<<<<<< HEAD
 	PWMVictorSPX* TankDroit1;
 	PWMVictorSPX* TankDroit2;
 	PWMVictorSPX* TankGauche1;
 	Encoder* anCo2z1;
 	Encoder* anCo2z2;
+=======
+
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 	ADXRS450_Gyro* gyro;
 	DoubleSolenoid* DoubleSolenoid1;
 	Servo* servoFenwick;
+<<<<<<< HEAD
+=======
+	Servo* servoPince;
+	std::Base base;
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 	std::Fenwick fenwick;
 	std::Pince pince;
+	PowerDistributionPanel* pdp = new PowerDistributionPanel();
 	bool vitesseBallShifter;
 	bool sheet = false;
 	bool etatFenwick;
@@ -68,26 +79,39 @@ public:
 	void RobotInit()
 	{
 		Joystick1 = new Joystick(0);
+<<<<<<< HEAD
 		TankDroit1 = new PWMVictorSPX(3);
 		TankDroit2 = new PWMVictorSPX(4);
 		TankGauche1 = new PWMVictorSPX(5);
 		anCo2z1 = new Encoder(0, 1, false, Encoder::EncodingType::k4X);
 		anCo2z2 = new Encoder(2, 3, false, Encoder::EncodingType::k4X);
+=======
+
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 		DoubleSolenoid1 = new DoubleSolenoid(0, 1);
 		servoFenwick = new Servo(6);
 		DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
+<<<<<<< HEAD
 		TankGauche1->Set(0);
 		TankDroit2->Set(0);
 		TankDroit1->Set(0);
 		anCo2z1->Reset();
 		anCo2z2->Reset();
+=======
+
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 		//double distanceQuOnVeut = ((anCo2z1->Get() + anCo2z2->Get())/2)/7.5; //en cm
-		gyro = new ADXRS450_Gyro();
+		//gyro = new ADXRS450_Gyro();
 		//double degre = gyro->GetAngle();
 		vitesseBallShifter = false;
+<<<<<<< HEAD
 		gyro->Calibrate();
 		std::cout << "*************** VITESSE 1 ACTIVEE ***************"
 				<< std::endl;
+=======
+		//gyro->Calibrate();
+		std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
@@ -96,12 +120,22 @@ public:
 
 	void AutonomousInit() override
 	{
+<<<<<<< HEAD
+=======
+		//pince.descendrePince (Joystick1, servoPince, limitSwitch);
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 
 	}
 
 	void AutonomousPeriodic()
 	{
 
+<<<<<<< HEAD
+=======
+		base.AvancerDistance(50);
+		base.AfficherCodeuses();
+
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 	}
 
 	void TeleopInit()
@@ -112,6 +146,7 @@ public:
 	void TeleopPeriodic()
 	{
 		//############ Contrôle du moteur ############
+<<<<<<< HEAD
 		y = Joystick1->GetY();
 		z = Joystick1->GetZ();
 
@@ -132,6 +167,17 @@ public:
 		fenwick.afficherPosition();*/
 
 		if (Joystick1->GetTriggerPressed())
+=======
+
+		//fenwick.deplacerFenwick(40);
+		std::cout<<pdp->GetCurrent(13)<<std::endl;
+		fenwick.afficherPosition();
+		base.AfficherCodeuses();
+
+		base.Deplacer(Joystick1);
+
+		if(Joystick1->GetTriggerPressed())
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 		{
 			if (vitesseBallShifter)
 			{
@@ -190,15 +236,19 @@ public:
 		{
 			if (etatFenwick == true)
 			{
+<<<<<<< HEAD
 				pince.descendrePinceDebutMatch();
 				fenwick.monterDuRobot(Joystick1, anCo2z1, anCo2z2,
 						servoFenwick);
+=======
+				pince.descendrePince(Joystick1,servoPince,limitSwitch);
+				//fenwick.monterDuRobot(Joystick1,servoFenwick);
+>>>>>>> 9e54e3a4a256accd3241fad6e7ce5c9936fba988
 			}
 		}
 
 		//############ Valeurs encodeurs ############
-		//std::cout << "Encodeur droit : " << anCo2z1->Get() << std::endl;
-		//std::cout << "Encodeur gauche : " << anCo2z2->Get() << std::endl;
+
 
 		/*while(anCo2z1->Get()<TicQuonVeut)
 		 {
