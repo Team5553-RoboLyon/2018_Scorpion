@@ -23,9 +23,9 @@ public:
 
 	void attraperCube(bool boutonPresse);
 	void ejecterCube(bool boutonPresse);
-	void leverPince();
-    void descendrePinceDebutMatch();
-    void descendrePinceFinMatch();
+	void lever();
+    void descendreDebutMatch();
+    void descendreFinMatch();
 
 private:
 	PWMVictorSPX* Bras;
@@ -33,7 +33,8 @@ private:
 	Servo* AntiRetour;
 	DigitalInput* Switch;
 
-	const double vitesserotation = 0.5;
+	const double vitesseAspiration = 0.45;
+	const double vitesseEjection = 0.3;
 	const int dureeAspiration = 30;
 	const int dureeEjection = 10;
 

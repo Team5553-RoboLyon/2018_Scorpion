@@ -25,7 +25,7 @@ Pince::Pince()
 	Bag = new PWMVictorSPX(8);
 	Bag->Set(0);
 
-	AntiRetour = new Servo(10);
+	AntiRetour = new Servo(9);
 	Switch = new DigitalInput(9);
 }
 
@@ -33,12 +33,12 @@ void Pince::attraperCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(-vitesserotation);
+		Bras->Set(-vitesseAspiration);
 		incrementationAspiration = 0;
 	}
 	else if(incrementationAspiration < dureeAspiration)
 	{
-		Bras->Set(-vitesserotation);
+		Bras->Set(-vitesseAspiration);
 	}
 	else if (incrementationAspiration == dureeAspiration)
 	{
@@ -51,12 +51,12 @@ void Pince::ejecterCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(vitesserotation);
+		Bras->Set(vitesseEjection);
 		incrementationEjection = 0;
 	}
 	else if(incrementationEjection < dureeEjection)
 	{
-		Bras->Set(vitesserotation);
+		Bras->Set(vitesseEjection);
 	}
 	else if (incrementationEjection == dureeEjection)
 	{
@@ -66,12 +66,12 @@ void Pince::ejecterCube(bool boutonPresse)
 	incrementationEjection += 1;
 }
 
-void Pince::leverPince()
+void Pince::lever()
 {
 
 }
 
-void Pince::descendrePinceDebutMatch()
+void Pince::descendreDebutMatch()
 {
 	AntiRetour->SetAngle (0);
 
@@ -84,7 +84,7 @@ void Pince::descendrePinceDebutMatch()
 	Bag->Set (0);
 }
 
-void Pince::descendrePinceFinMatch()
+void Pince::descendreFinMatch()
 {
 
 }
