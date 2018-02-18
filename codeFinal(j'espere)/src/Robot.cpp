@@ -98,30 +98,42 @@ public:
 
 		pince.afficherSwitch();
 
-//		if(Joystick1->GetRawButton(12))
-//		{
-//			fenwick.setConsigne(0);
-//		}
-//		else if(Joystick1->GetRawButton(10))
-//		{
-//			fenwick.setConsigne(700);
-//		}
-//		else if(Joystick1->GetRawButton(8))
-//		{
-//			fenwick.setConsigne(1300);
-//		}
+		//pince.ajuster(Joystick1->GetPOV());
+
+		//###############################################################CODE POUR SE MONTER LE FENWICK
+		if(Joystick1->GetRawButton(12))
+		{
+			//fenwick.raz();
+		}
+		else if(Joystick1->GetRawButton(10))
+		{
+			fenwick.setConsigne(700);
+		}
+		else if(Joystick1->GetRawButton(8))
+		{
+			fenwick.setConsigne(1400);
+		}
+		fenwick.deplacerFenwickInfini();
+
+		//###############################################################CODE POUR SE MONTER A LA FIN
+		/*while(Joystick1->GetRawButton(11) == false)
+		{
+			fenwick.afficherPosition();
+			Base.deplacer(Joystick1);
+		}
 
 		fenwick.monteeFinaleFenwick();
-		while(Joystick1->GetRawButton(11) == false)
+		while(Joystick1->GetRawButton(12) == false)
 		{
-
+			Base.deplacer(Joystick1);
 		}
 		fenwick.monteeDuRobot();
 
 		while(true)
 		{
 
-		}
+		}*/
+
 
 		/*if (Joystick1->GetRawButton(3))
 		{

@@ -27,6 +27,7 @@ public:
     void descendreDebutMatch();
     void descendreFinMatch();
     void afficherSwitch();
+    void ajuster(int pov);
 
 	virtual ~Pince();
 
@@ -41,6 +42,7 @@ private:
 	const int dureeAspiration = 30;
 	const int dureeEjection = 10;
 
+	bool antiRetourEngage;
     int incrementationAspiration = dureeAspiration;
     int incrementationEjection = dureeEjection;
 };

@@ -27,6 +27,7 @@ Pince::Pince()
 	Bag->Set(0);
 
 	AntiRetour = new Servo(9);
+	AntiRetour->Set(0.99);
 	Switch = new DigitalInput(9);
 }
 
@@ -34,12 +35,12 @@ void Pince::attraperCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(-vitesseAspiration);
+		Bras->Set(vitesseAspiration);
 		incrementationAspiration = 0;
 	}
 	else if(incrementationAspiration < dureeAspiration)
 	{
-		Bras->Set(-vitesseAspiration);
+		Bras->Set(vitesseAspiration);
 	}
 	else if (incrementationAspiration == dureeAspiration)
 	{
@@ -52,12 +53,12 @@ void Pince::ejecterCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(vitesseEjection);
+		Bras->Set(-vitesseEjection);
 		incrementationEjection = 0;
 	}
 	else if(incrementationEjection < dureeEjection)
 	{
-		Bras->Set(vitesseEjection);
+		Bras->Set(-vitesseEjection);
 	}
 	else if (incrementationEjection == dureeEjection)
 	{
@@ -101,6 +102,41 @@ void Pince::descendreFinMatch()
 void Pince::afficherSwitch()
 {
 	std::cout << "Switch : " << Switch->Get() << std::endl;
+}
+
+void Pince::ajuster(int pov)
+{
+	if(pov == 0)
+	{
+		if(antiRetourEngage)
+		{
+			for(int i = 0; i<100; i++)
+			{
+				Bag->Set(-0.2);
+			}
+			AntiRetour->Set(0);
+			antiRetourEngage = false;
+		}
+		Bag->Set(-0.2);
+	}
+	else if(pov == 180)
+	{
+		if(antiRetourEngage)
+		{
+			for(int i = 0; i<100; i++)
+			{
+				Bag->Set(-0.2);
+			}
+			AntiRetour->Set(0);
+			antiRetourEngage = false;
+		}
+		Bag->Set(0.2);
+	}
+	else
+	{
+		AntiRetour->Set(0.99);
+		antiRetourEngage = true;
+	}
 }
 
 Pince::~Pince()

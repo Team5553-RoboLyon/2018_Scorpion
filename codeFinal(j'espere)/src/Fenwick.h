@@ -21,12 +21,14 @@ class Fenwick {
 public:
 	void setConsigne(int consigne);
 	void deplacerFenwick();
+	void deplacerFenwickInfini();
 	void ajuster(int pov);
 	void monteeDuRobot();
 	void monteeFinaleFenwick();
 	void desactiverServo();
 	void activerServo();
 	void afficherPosition();
+	void raz();
 	Fenwick();
 	virtual ~Fenwick();
 
@@ -45,6 +47,7 @@ private:
 	double differenceErreurs = 0;
 	double puissanceMoteur = 0;
 	double erreurPrecedente;
+	bool etatServo;
 };
 
 }
