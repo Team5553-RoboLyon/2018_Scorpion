@@ -98,20 +98,30 @@ public:
 
 		pince.afficherSwitch();
 
-		if(Joystick1->GetRawButton(12))
-		{
-			fenwick.setConsigne(0);
-		}
-		else if(Joystick1->GetRawButton(10))
-		{
-			fenwick.setConsigne(700);
-		}
-		else if(Joystick1->GetRawButton(8))
-		{
-			fenwick.setConsigne(1300);
-		}
+//		if(Joystick1->GetRawButton(12))
+//		{
+//			fenwick.setConsigne(0);
+//		}
+//		else if(Joystick1->GetRawButton(10))
+//		{
+//			fenwick.setConsigne(700);
+//		}
+//		else if(Joystick1->GetRawButton(8))
+//		{
+//			fenwick.setConsigne(1300);
+//		}
 
-		fenwick.deplacerFenwick();
+		fenwick.monteeFinaleFenwick();
+		while(Joystick1->GetRawButton(11) == false)
+		{
+
+		}
+		fenwick.monteeDuRobot();
+
+		while(true)
+		{
+
+		}
 
 		/*if (Joystick1->GetRawButton(3))
 		{
@@ -196,8 +206,6 @@ public:
 	{
 
 	}
-
-private:
 
 };
 
