@@ -14,6 +14,7 @@
 #include <Servo.h>
 #include <math.h>
 #include <iostream>
+#include <Pince.h>
 
 #define TOUR 13.6
 
@@ -25,129 +26,138 @@ Fenwick::Fenwick()
 	fenwick1 = new VictorSP(0);
 	fenwick2 = new VictorSP(1);
 	fenwick3 = new VictorSP(2);
-	shifter = new DoubleSolenoid(0, 1);
 
-	//servo = new Servo(0);
-	shifter->Set(frc::DoubleSolenoid::kForward);
-	anCo2z = new Encoder(6, 7, false, Encoder::EncodingType::k4X);
+	servo = new Servo(6);
+	servo->Set(0.35);
 
-	anCo2z->Reset();
+	Encodeur = new Encoder(6, 7, false, Encoder::EncodingType::k4X);
+	Encodeur->Reset();
 
 	fenwick1->Set(0.0);
 	fenwick2->Set(0.0);
 	fenwick3->Set(0.0);
-	//servo->Set(0.0);
+
+	consigne = 0;
+	tolerance = 25;
 }
-void Fenwick::positionFenwick(Encoder*encodeur1, Encoder*encodeur2,
-		double position)
+
+void Fenwick::setConsigne(int consigneFenwick)
 {
-	while ((encodeur1->Get() + encodeur2->Get()) / 2 <= position)
+	consigne = consigneFenwick;
+
+	if(consigne < 0)
 	{
-		fenwick1->Set(0.0);
-		fenwick2->Set(0.0);
-		fenwick3->Set(0.0);
+		consigne = 0;
+	}
+	else if(consigne > 1500/*Valeur a determiner = max */)
+	{
+		consigne = 1500;/*Valeur a determiner = max*/
 	}
 
+	sommeErreurs = 0;
 }
-void Fenwick::ajustementFenwick(Joystick* Joystick1, Encoder* encodeur,
-		Encoder* encodeur2)
+
+void Fenwick::ajuster(int pov)
 {
-	double POV = Joystick1->GetPOV();
-	double distanceQuOnVeut/*en cm*/, distanceQuOnA/*en cm*/, distanceRestante;
-	distanceQuOnA = ((encodeur->Get() + encodeur2->Get()) / 2) / 7.5;
-	distanceRestante = (distanceQuOnVeut - distanceQuOnA) / distanceQuOnVeut;
-	if (distanceRestante <= 0.2)
+	if(pov == 0)
 	{
-		fenwick1->Set(0.4);
-		fenwick2->Set(0.4);
-		fenwick3->Set(0.4);
+		this->setConsigne(consigne + 10); /*Valeur a determiner = max*/
 	}
-	if (POV)
+	else if(pov == 180)
 	{
-
-		fenwick1->Set(POV);
-		fenwick2->Set(POV);
-		fenwick3->Set(POV);
-//pov = true;
-
-//servo->SetAngle(-uneCertaineValeur);
-
-		/*if(servo->GetAngle()<0)
-		 {
-		 servo->SetAngle(0);
-		 }
-		 */
+		this->setConsigne(consigne - 10); /*Valeur a determiner = max*/
 	}
-
-	/*if(pov == false)
-	 {
-	 servo->SetAngle(uneCertaineValeur);
-	 }
-
-	 SmartDashboard::PutNumber("DB/Slider 2",POV);*/
 }
-void Fenwick::stabilisationFenwick(Encoder* encodeur1, Encoder*encodeur2,
-		Joystick* joystick)
-{
-	//servo->SetAngle(-uneCertaineValeur);
 
-	if (pov == false)
+void Fenwick::monteeFinaleFenwick(/*Pince* pince*/)
+{
+	this->setConsigne(600);
+	this->deplacerFenwick();
+
+	//pince->descendreFinMatch();
+
+	this->setConsigne(1500);
+	this->deplacerFenwick();
+}
+
+void Fenwick::monteeDuRobot()
+{
+	while(Encodeur->Get() > 600)
 	{
-		//servo->SetAngle(uneCertaineValeur);
+		fenwick1->Set(-0.5);
+		fenwick2->Set(-0.5);
+		fenwick3->Set(-0.5);
 	}
 
+	servo->Set(0.6);
+	fenwick1->Set(0);
+	fenwick2->Set(0);
+	fenwick3->Set(0);
 }
 
-void Fenwick::shifting(Joystick* Joystick1)
+void Fenwick::deplacerFenwick()
 {
-	if (Joystick1->GetRawButton(11))
-		shifter->Set(frc::DoubleSolenoid::kReverse);
-	if (Joystick1->GetRawButton(12))
-		shifter->Set(frc::DoubleSolenoid::kForward);
+	this->desactiverServo();
 
-}
-void Fenwick::monteeDuRobot(Joystick* joystick1, Encoder* encodeur1,
-		Encoder* encodeur2, Servo* servo)
-{
-
-	while (((encodeur1->Get() + encodeur2->Get()) - 2) <= 200)
-	{
-		fenwick1->Set(0.0);
-		fenwick2->Set(0.0);
-		fenwick3->Set(0.0);
-	}
-	servo->SetAngle(45);
-
-}
-void Fenwick::deplacerFenwick(double consigne)
-{
 	do
 	{
-	position = -anCo2z->Get();// * 13.6 / 360;
-	std::cout << "Position : " << position << std::endl;
+	position = Encodeur->Get();
 	erreur = (consigne - position) / consigne;
-	std::cout << "Erreur : " << erreur << std::endl;
-	sommeAllErreurs += erreur;
+	sommeErreurs += erreur;
 	differenceErreurs = erreurPrecedente - erreur;
-	puissanceMoteur = (kP * erreur/*+ kI * sommeAllErreurs + kD * differenceErreurs*/);
+
+	puissanceMoteur = (kP * erreur);/*+ kI * sommeAllErreurs + kD * differenceErreurs);*/
 	fenwick1->Set(puissanceMoteur);
 	fenwick2->Set(puissanceMoteur);
 	fenwick3->Set(puissanceMoteur);
 	erreurPrecedente = erreur;
+
+	std::cout << "Puissance : " << puissanceMoteur << std::endl;
+	std::cout << "Position : " << position << std::endl;
 	}
-	while(true);//En attendant j'ai mis une boucle infinie
+	while(abs(erreur) > tolerance);
+
+	this->activerServo();
 }
+
+void Fenwick::activerServo()
+{
+	fenwick1->Set(0);
+	fenwick2->Set(0);
+	fenwick3->Set(0);
+	servo->Set(0.075);
+}
+
+void Fenwick::desactiverServo()
+{
+	int a = Encodeur->Get();
+	std::cout<<"Debut desactivation du servo"<<std::endl;
+	do
+	{
+	fenwick1->Set(0.3);
+	fenwick2->Set(0.3);
+	fenwick3->Set(0.3);
+
+	}
+	while(Encodeur->Get() < a+20);
+
+	fenwick1->Set(0);
+	fenwick2->Set(0);
+	fenwick3->Set(0);
+
+	servo->Set(0.35);
+}
+
 void Fenwick::afficherPosition()
 {
-	std::cout << "TIC ENCODEUR:" << -anCo2z->Get() << std::endl << "DISTANCE PARCOURU:" << -anCo2z->Get() * 13.6 / 360 << std::endl;
-
+	std::cout << "TIC ENCODEUR : " << Encodeur->Get() << std::endl << "DISTANCE PARCOURUE :" << -Encodeur->Get() * 13.6 / 360 << std::endl;
 }
 Fenwick::~Fenwick()
 {
 	delete fenwick1;
 	delete fenwick2;
 	delete fenwick3;
-	delete anCo2z;
+	delete Encodeur;
 }
 
-} /* namespace std *
+}

@@ -31,18 +31,18 @@ BaseRoulante::BaseRoulante()
 
 	EncodeurDroit = new Encoder(0, 1, false, Encoder::EncodingType::k4X);
 	EncodeurDroit->Reset();
-	EncodeurDroit->SetReverseDirection(true);
+	EncodeurDroit->SetReverseDirection(false);
 
 	EncodeurGauche = new Encoder(2, 3, false, Encoder::EncodingType::k4X);
 	EncodeurGauche->Reset();
-	EncodeurGauche->SetReverseDirection(false);
+	EncodeurGauche->SetReverseDirection(true);
 
 	DoubleSolenoid1 = new DoubleSolenoid(2, 3);
 	DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
 
 	vitesseBallShifter = false;
-	std::cout << "*************** VITESSE 1 ACTIVEE ***************"
-			<< std::endl;
+	std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
+	etatPrecedentGachette = false;
 }
 
 void BaseRoulante::deplacer(Joystick* joystick)
@@ -76,7 +76,7 @@ void BaseRoulante::afficherCodeuses()
 void BaseRoulante::parcourir_distance(int distance_a_parcourir)
 {
 	r = 7.62;
-	kP = 2;
+	kP = 1;
 	kI = 0;
 	kD = 0;
 	tolerance = 20;
@@ -94,10 +94,11 @@ void BaseRoulante::parcourir_distance(int distance_a_parcourir)
 		distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
 		distanceParcourueGauche = EncodeurGauche->Get() * r * 2 * M_PI / 360;
 
-		erreurDroite = (distance_a_parcourir - distanceParcourueDroite)
-				/ distance_a_parcourir;
-		erreurGauche = (distance_a_parcourir - distanceParcourueGauche)
-				/ distance_a_parcourir;
+		std::cout << "Droite : " << distanceParcourueDroite << std::endl;
+		std::cout << "Gauche : " << distanceParcourueGauche << std::endl;
+
+		erreurDroite = (distance_a_parcourir - distanceParcourueDroite) / distance_a_parcourir;
+		erreurGauche = (distance_a_parcourir - distanceParcourueGauche) / distance_a_parcourir;
 
 		sommeErreursDroite += erreurDroite;
 		sommeErreursGauche += erreurGauche;
@@ -105,36 +106,41 @@ void BaseRoulante::parcourir_distance(int distance_a_parcourir)
 		diferenceErreursDroite = erreurPrecedenteDroite - erreurDroite;
 		diferenceErreursGauche = erreurPrecedenteGauche - erreurGauche;
 
-		vitesseDroite = kP * erreurDroite + kI * sommeErreursDroite
-				+ kD * diferenceErreursDroite;
-		vitesseGauche = kP * erreurGauche + kI * sommeErreursGauche
-				+ kD * diferenceErreursGauche;
+		vitesseDroite = kP * erreurDroite + kI * sommeErreursDroite + kD * diferenceErreursDroite;
+		vitesseGauche = kP * erreurGauche + kI * sommeErreursGauche + kD * diferenceErreursGauche;
 
-		BaseGauche->Set(vitesseGauche);
-		BaseDroite1->Set(-vitesseDroite);
-		BaseDroite2->Set(-vitesseDroite);
+		BaseGauche->Set(-vitesseGauche);
+		BaseDroite1->Set(vitesseDroite);
+		BaseDroite2->Set(vitesseDroite);
 
 		erreurPrecedenteDroite = erreurDroite;
 		erreurPrecedenteGauche = erreurGauche;
 	} while (true);
 }
 
-void BaseRoulante::changerVitesse()
+void BaseRoulante::changerVitesse(bool etatGachette)
 {
-
-	if (vitesseBallShifter)
+	if(etatGachette && !etatPrecedentGachette) //Si la gachette est appuyée et qu'elle ne l'etait pas avant
 	{
-		DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
-		std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
-		vitesseBallShifter = false;
-	}
-	else
-	{
-		DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kReverse);
-		std::cout << "*************** VITESSE 2 ACTIVEE ***************" << std::endl;
-		vitesseBallShifter = true;
-	}
+		if (vitesseBallShifter)
+		{
+			DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
+			std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
+			vitesseBallShifter = false;
+		}
+		else
+		{
+			DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kReverse);
+			std::cout << "*************** VITESSE 2 ACTIVEE ***************" << std::endl;
+			vitesseBallShifter = true;
+		}
 
+		etatPrecedentGachette = true;
+	}
+	else if (!etatGachette) //Si la gachette n'est pas appuyée
+	{
+		etatPrecedentGachette = false;
+	}
 }
 
 void BaseRoulante::rotation(int angle_consigne)
@@ -180,4 +186,4 @@ BaseRoulante::~BaseRoulante()
 	delete Gyro;
 }
 
-} /* namespace std */
+}

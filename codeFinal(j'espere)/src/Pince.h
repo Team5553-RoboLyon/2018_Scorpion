@@ -13,19 +13,22 @@
 #include <DigitalInput.h>
 #include <Encoder.h>
 #include <Servo.h>
+#include <Fenwick.h>
 
 namespace std {
 
 class Pince {
 public:
 	Pince();
-	virtual ~Pince();
 
 	void attraperCube(bool boutonPresse);
 	void ejecterCube(bool boutonPresse);
 	void lever();
     void descendreDebutMatch();
     void descendreFinMatch();
+    void afficherSwitch();
+
+	virtual ~Pince();
 
 private:
 	PWMVictorSPX* Bras;

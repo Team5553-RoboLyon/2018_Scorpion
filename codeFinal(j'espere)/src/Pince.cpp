@@ -14,6 +14,7 @@
 #include <Joystick.h>
 #include <Encoder.h>
 #include <Servo.h>
+#include <Fenwick.h>
 
 namespace std {
 
@@ -75,9 +76,9 @@ void Pince::descendreDebutMatch()
 {
 	AntiRetour->SetAngle (0);
 
-	while(Switch->Get()==false)
+	while(Switch->Get() == false)
 	{
-		Bag->Set(-0.2);
+		//Bag->Set(-0.2);
 	}
 
 	AntiRetour->SetAngle (90);
@@ -86,7 +87,20 @@ void Pince::descendreDebutMatch()
 
 void Pince::descendreFinMatch()
 {
+	AntiRetour->SetAngle (0);
 
+	while(Switch->Get() == false)
+	{
+		Bag->Set(-0.2);
+	}
+
+	AntiRetour->SetAngle (90);
+	Bag->Set (0);
+}
+
+void Pince::afficherSwitch()
+{
+	std::cout << "Switch : " << Switch->Get() << std::endl;
 }
 
 Pince::~Pince()

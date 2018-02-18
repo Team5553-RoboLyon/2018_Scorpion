@@ -44,8 +44,8 @@ public:
 	Encoder* anCo2z1;
 	Encoder* anCo2z2;
 	Servo* servoFenwick;
-	std::Fenwick fenwick;
 	std::Pince pince;
+	std::Fenwick fenwick;
 	std::BaseRoulante Base;
 	bool vitesseBallShifter;
 	bool sheet = false;
@@ -64,7 +64,6 @@ public:
 	void RobotInit()
 	{
 		Joystick1 = new Joystick(0);
-		servoFenwick = new Servo(6);
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
@@ -90,64 +89,72 @@ public:
 	{
 		Base.deplacer(Joystick1);
 
-		/*fenwick.deplacerFenwick(40);
-		fenwick.afficherPosition();*/
-
-		if (Joystick1 -> GetRawButton(1))
-		{
-			Base.changerVitesse();
-		}
+		Base.changerVitesse(Joystick1->GetRawButton(1));
 
 		pince.attraperCube(Joystick1->GetRawButton(2));
 
 		pince.ejecterCube(Joystick1->GetRawButton(4));
 
-		//pince.descendreDebutMatch(); -> Pour la periode auto
+		fenwick.setConsigne(1000);
+		fenwick.deplacerFenwick();
 
-		if (Joystick1->GetRawButton(3))
+		std::cout << "C'est gagné !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+
+		for(int i = 0; i<100000000000; i++)
 		{
-			consigne = 20;
-			fenwick.deplacerFenwick(consigne);
-			fenwick.sommeAllErreurs = 0;
+
+		}
+
+		//fenwick.deplacerFenwick();
+
+		/*if(Joystick1->GetRawButton(7))
+		{
+			fenwick.setConsigne(0);
+
+		}
+		else if(UN_AUTRE_BOUTON)
+		{
+			fenwick.setConsigne(ETAGE_SWITCH);
+		}
+		else if(ENCORE_UN_AUTRE_BOUTON)
+		{
+			fenwick.setConsigne(ETAGE_SCALE);
+		}
+		fenwick.ajuster(Joystick1->GetPOV);
+
+		fenwick.deplacerFenwick();*/
+
+		/*if (Joystick1->GetRawButton(3))
+		{
+			fenwick.setConsigne(20);
 		}
 
 		if (Joystick1->GetRawButton(5))
 		{
-			consigne = 0;
-			fenwick.sommeAllErreurs = 0;
-
+			fenwick.setConsigne(0);
 		}
 		if (Joystick1->GetRawButton(6))
 		{
-			consigne = 152;
-
-			fenwick.sommeAllErreurs = 0;
-
+			fenwick.setConsigne(152);
 		}
 		if (Joystick1->GetRawButton(7))
 		{
-			consigne = 40;
-
-			fenwick.sommeAllErreurs = 0;
-
+			fenwick.setConsigne(40);
 		}
 		if (Joystick1->GetRawButton(8))
 		{
 			position = 0;
-
-			fenwick.sommeAllErreurs = 0;
-
 		}
 		if (Joystick1->GetRawButton(9))
 		{
 			if (etatFenwick == true)
 			{
 				pince.descendreDebutMatch();
-				fenwick.monterDuRobot(Joystick1, anCo2z1, anCo2z2, servoFenwick);
+				fenwick.monteeDuRobot(Joystick1, anCo2z1, anCo2z2, servoFenwick);
 			}
-		}
+		}*/
 
-		//############ Valeurs encodeurs ############
+		//         ############ Valeurs encodeurs ############
 		//std::cout << "Encodeur droit : " << anCo2z1->Get() << std::endl;
 		//std::cout << "Encodeur gauche : " << anCo2z2->Get() << std::endl;
 
@@ -193,9 +200,6 @@ public:
 		 TankGauche2->Set(0.0);
 		 }
 		 */
-
-		//fenwick.positionFenwick(anCo2z1,anCo2z2,position);
-		//fenwick.shifting(Joystick1);
 
 	}
 

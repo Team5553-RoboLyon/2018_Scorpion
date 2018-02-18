@@ -23,7 +23,7 @@ public:
 
 	void deplacer(Joystick* joystick);
 	void afficherCodeuses();
-	void changerVitesse();
+	void changerVitesse(bool etatGachette);
 	void afficherPosition();
 	void parcourir_distance(int distance_a_parcourir);
 	void rotation(int angle_consigne);
@@ -47,7 +47,7 @@ private:
 	double distanceParcourueGauche, erreurGauche, erreurPrecedenteGauche, sommeErreursGauche, diferenceErreursGauche;
 	double angleParcouru, erreur, erreurPrecedente, sommeErreurs, diferenceErreurs;
 	double tolerance, kP, kI, kD;
-	bool vitesseBallShifter;
+	bool vitesseBallShifter, etatPrecedentGachette;
 };
 
 }
