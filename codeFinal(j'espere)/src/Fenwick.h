@@ -13,7 +13,6 @@
 #include <GenericHID.h>
 #include <Encoder.h>
 #include <Servo.h>
-#include <Pince.h>
 
 
 namespace std {
@@ -23,9 +22,9 @@ public:
 	void setConsigne(int consigne);
 	void deplacerFenwick();
 	void ajuster(int pov);
-	void desactiverServo();
-	void monteeFinaleFenwick(/*Pince* pince*/);
 	void monteeDuRobot();
+	void monteeFinaleFenwick();
+	void desactiverServo();
 	void activerServo();
 	void afficherPosition();
 	Fenwick();
@@ -37,7 +36,6 @@ private:
 	VictorSP* fenwick3;
 	Servo* servo;
 	Encoder* Encodeur;
-
 
 	double consigne, position, erreur, tolerance;
 	double kP = 10; //3 pour le 1er etage

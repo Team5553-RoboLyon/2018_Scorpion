@@ -44,8 +44,8 @@ public:
 	Encoder* anCo2z1;
 	Encoder* anCo2z2;
 	Servo* servoFenwick;
-	std::Pince pince;
 	std::Fenwick fenwick;
+	std::Pince pince;
 	std::BaseRoulante Base;
 	bool vitesseBallShifter;
 	bool sheet = false;
@@ -64,6 +64,7 @@ public:
 	void RobotInit()
 	{
 		Joystick1 = new Joystick(0);
+		servoFenwick = new Servo(6);
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
@@ -82,7 +83,7 @@ public:
 
 	void TeleopInit()
 	{
-
+		fenwick.setConsigne(0);
 	}
 
 	void TeleopPeriodic()
@@ -95,34 +96,22 @@ public:
 
 		pince.ejecterCube(Joystick1->GetRawButton(4));
 
-		fenwick.setConsigne(1000);
-		fenwick.deplacerFenwick();
+		pince.afficherSwitch();
 
-		std::cout << "C'est gagné !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-
-		for(int i = 0; i<100000000000; i++)
-		{
-
-		}
-
-		//fenwick.deplacerFenwick();
-
-		/*if(Joystick1->GetRawButton(7))
+		if(Joystick1->GetRawButton(12))
 		{
 			fenwick.setConsigne(0);
-
 		}
-		else if(UN_AUTRE_BOUTON)
+		else if(Joystick1->GetRawButton(10))
 		{
-			fenwick.setConsigne(ETAGE_SWITCH);
+			fenwick.setConsigne(700);
 		}
-		else if(ENCORE_UN_AUTRE_BOUTON)
+		else if(Joystick1->GetRawButton(8))
 		{
-			fenwick.setConsigne(ETAGE_SCALE);
+			fenwick.setConsigne(1300);
 		}
-		fenwick.ajuster(Joystick1->GetPOV);
 
-		fenwick.deplacerFenwick();*/
+		fenwick.deplacerFenwick();
 
 		/*if (Joystick1->GetRawButton(3))
 		{
