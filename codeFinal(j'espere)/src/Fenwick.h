@@ -28,7 +28,6 @@ public:
 	void desactiverServo();
 	void activerServo();
 	void afficherPosition();
-	void raz();
 	Fenwick();
 	virtual ~Fenwick();
 

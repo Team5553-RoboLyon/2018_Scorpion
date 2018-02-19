@@ -29,6 +29,7 @@ Fenwick::Fenwick()
 
 	servo = new Servo(6);
 	servo->Set(0.35);
+	etatServo = false;
 
 	Encodeur = new Encoder(6, 7, false, Encoder::EncodingType::k4X);
 	Encodeur->Reset();
@@ -102,7 +103,8 @@ void Fenwick::monteeDuRobot()
 		fenwick3->Set(-1);
 	}
 
-	servo->Set(0.6);
+	servo->Set(0.5);
+	std::cout << "Alerte!!!!!!!!!!!!!!! Nous avons un code rouge" << std::endl;
 	fenwick1->Set(0);
 	fenwick2->Set(0);
 	fenwick3->Set(0);
@@ -138,20 +140,6 @@ void Fenwick::deplacerFenwick()
 		}
 }
 
-
-void Fenwick::raz()
-{
-	this->desactiverServo();
-	while(Encodeur->Get() > 10)
-	{
-		fenwick1->Set(-0.2);
-		fenwick2->Set(-0.2);
-		fenwick3->Set(-0.2);
-	}
-	this->activerServo();
-}
-
-
 void Fenwick::deplacerFenwickInfini()
 {
 	do
@@ -168,7 +156,7 @@ void Fenwick::activerServo()
 		fenwick1->Set(0);
 		fenwick2->Set(0);
 		fenwick3->Set(0);
-		servo->Set(0.075);
+		servo->Set(0);
 		etatServo = true;
 	}
 }
@@ -191,7 +179,7 @@ void Fenwick::desactiverServo()
 		fenwick2->Set(0);
 		fenwick3->Set(0);
 
-		servo->Set(0.35);
+		servo->Set(0.3);
 		etatServo = false;
 	}
 }

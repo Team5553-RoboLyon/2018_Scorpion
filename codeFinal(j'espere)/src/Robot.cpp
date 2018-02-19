@@ -103,7 +103,7 @@ public:
 		//###############################################################CODE POUR SE MONTER LE FENWICK
 		if(Joystick1->GetRawButton(12))
 		{
-			//fenwick.raz();
+			fenwick.setConsigne(0);
 		}
 		else if(Joystick1->GetRawButton(10))
 		{
@@ -127,12 +127,7 @@ public:
 		{
 			Base.deplacer(Joystick1);
 		}
-		fenwick.monteeDuRobot();
-
-		while(true)
-		{
-
-		}*/
+		fenwick.monteeDuRobot();*/
 
 
 		/*if (Joystick1->GetRawButton(3))
