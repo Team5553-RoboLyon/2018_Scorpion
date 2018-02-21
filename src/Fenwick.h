@@ -19,16 +19,18 @@ namespace std {
 
 class Fenwick {
 public:
-	void setConsigne(int consigne);
-	void deplacerFenwick();
-	void deplacerFenwickInfini();
-	void ajuster(int pov);
+	Fenwick();
+	void deplacer();
+	void goToZero();
+	void goToSwitch();
+	void goToScale();
+
 	void monteeDuRobot();
 	void monteeFinaleFenwick();
 	void desactiverServo();
 	void activerServo();
 	void afficherPosition();
-	Fenwick();
+
 	virtual ~Fenwick();
 
 private:

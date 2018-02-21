@@ -42,76 +42,10 @@ Fenwick::Fenwick()
 	tolerance = 25;
 }
 
-void Fenwick::setConsigne(int consigneFenwick)
+void Fenwick::deplacer()
 {
-	consigne = consigneFenwick;
-
-	if(consigne < 0)
-	{
-		consigne = 0;
-	}
-	else if(consigne > 1500/*Valeur a determiner = max */)
-	{
-		consigne = 1500;/*Valeur a determiner = max*/
-	}
-
-	sommeErreurs = 0;
-}
-
-void Fenwick::ajuster(int pov)
-{
-	if(pov == 0)
-	{
-		this->setConsigne(consigne + 10); /*Valeur a determiner = max*/
-	}
-	else if(pov == 180)
-	{
-		this->setConsigne(consigne - 10); /*Valeur a determiner = max*/
-	}
-}
-
-void Fenwick::monteeFinaleFenwick(/*Pince* pince*/)
-{
-	//this->setConsigne(600);
-	//this->deplacerFenwick();
-	//pince->descendreFinMatch();
-
-	this->setConsigne(1500);
 	do
 	{
-	this->deplacerFenwick();
-	} while(erreur > 0);
-}
-
-void Fenwick::monteeDuRobot()
-{
-	this->desactiverServo();
-
-	while(Encodeur->Get() > 675)
-	{
-		std::cout << Encodeur->Get() << std::endl;
-		fenwick1->Set(-0.2);
-		fenwick2->Set(-0.2);
-		fenwick3->Set(-0.2);
-	}
-
-	while(Encodeur->Get() > 360)
-	{
-		std::cout << Encodeur->Get() << std::endl;
-		fenwick1->Set(-1);
-		fenwick2->Set(-1);
-		fenwick3->Set(-1);
-	}
-
-	servo->Set(0.5);
-	std::cout << "Alerte!!!!!!!!!!!!!!! Nous avons un code rouge" << std::endl;
-	fenwick1->Set(0);
-	fenwick2->Set(0);
-	fenwick3->Set(0);
-}
-
-void Fenwick::deplacerFenwick()
-{
 		position = Encodeur->Get();
 		erreur = (consigne - position);
 		if (erreur > tolerance)
@@ -132,20 +66,58 @@ void Fenwick::deplacerFenwick()
 		}
 		else
 		{
-			fenwick1->Set(0);
-			fenwick2->Set(0);
-			fenwick3->Set(0);
 			this->activerServo();
 			std::cout << "C'est gagné :  " << position << std::endl;
 		}
+	} while(erreur > tolerance || erreur < -tolerance);
 }
 
-void Fenwick::deplacerFenwickInfini()
+void Fenwick::goToZero()
 {
-	do
+	consigne = 0;
+	this->deplacer();
+}
+
+void Fenwick::goToSwitch()
+{
+	consigne = 700;
+	this->deplacer();
+}
+
+void Fenwick::goToScale()
+{
+	consigne = 1400;
+	this->deplacer();
+}
+
+void Fenwick::monteeFinaleFenwick(/*Pince* pince*/)
+{
+	consigne = 1500;
+	this->deplacerFenwick();
+}
+
+void Fenwick::monteeDuRobot()
+{
+	this->desactiverServo();
+
+	while(Encodeur->Get() > 675)
 	{
-		this->deplacerFenwick();
-	} while(erreur > tolerance || erreur < -tolerance);
+		fenwick1->Set(-0.2);
+		fenwick2->Set(-0.2);
+		fenwick3->Set(-0.2);
+	}
+
+	while(Encodeur->Get() > 360)
+	{
+		fenwick1->Set(-1);
+		fenwick2->Set(-1);
+		fenwick3->Set(-1);
+	}
+
+	servo->Set(0.5);
+	fenwick1->Set(0);
+	fenwick2->Set(0);
+	fenwick3->Set(0);
 }
 
 void Fenwick::activerServo()
@@ -188,6 +160,7 @@ void Fenwick::afficherPosition()
 {
 	std::cout << "TIC ENCODEUR : " << Encodeur->Get() << std::endl << "DISTANCE PARCOURUE :" << -Encodeur->Get() * 13.6 / 360 << std::endl;
 }
+
 Fenwick::~Fenwick()
 {
 	delete fenwick1;

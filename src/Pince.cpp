@@ -20,10 +20,10 @@ namespace std {
 
 Pince::Pince()
 {
-	Bras = new PWMVictorSPX(7);
+	Bras = new VictorSP(7);
 	Bras->Set(0);
 
-	Bag = new PWMVictorSPX(8);
+	Bag = new VictorSP(8);
 	Bag->Set(0);
 
 	AntiRetour = new Servo(9);

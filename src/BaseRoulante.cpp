@@ -45,6 +45,13 @@ BaseRoulante::BaseRoulante()
 	etatPrecedentGachette = false;
 }
 
+void BaseRoulante::arreter()
+{
+	BaseGauche->Set(0);
+	BaseDroite1->Set(0);
+	BaseDroite2->Set(0);
+}
+
 void BaseRoulante::deplacer(Joystick* joystick)
 {
 	y = joystick->GetY();

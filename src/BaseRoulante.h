@@ -21,6 +21,7 @@ class BaseRoulante
 public:
 	BaseRoulante();
 
+	void arreter();
 	void deplacer(Joystick* joystick);
 	void afficherCodeuses();
 	void changerVitesse(bool etatGachette);

@@ -68,7 +68,6 @@ public:
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
-
 	}
 
 	void AutonomousInit() override
@@ -83,7 +82,7 @@ public:
 
 	void TeleopInit()
 	{
-		fenwick.setConsigne(0);
+
 	}
 
 	void TeleopPeriodic()
@@ -98,115 +97,41 @@ public:
 
 		pince.afficherSwitch();
 
-		//pince.ajuster(Joystick1->GetPOV());
+		pince.ajuster(Joystick1->GetPOV());
 
-		//###############################################################CODE POUR SE MONTER LE FENWICK
-		if(Joystick1->GetRawButton(12))
-		{
-			fenwick.setConsigne(0);
-		}
-		else if(Joystick1->GetRawButton(10))
-		{
-			fenwick.setConsigne(700);
-		}
-		else if(Joystick1->GetRawButton(8))
-		{
-			fenwick.setConsigne(1400);
-		}
-		fenwick.deplacerFenwickInfini();
+		// CODE POUR MONTER LE FENWICK
+//		if(Joystick1->GetRawButton(12))
+//		{
+//			Base.arreter();
+//			fenwick.goToZero();
+//		}
+//		else if(Joystick1->GetRawButton(10))
+//		{
+//			Base.arreter();
+//			fenwick.goToSwitch();
+//		}
+//		else if(Joystick1->GetRawButton(8))
+//		{
+//			Base.arreter();
+//			fenwick.goToScale);
+//		}
 
-		//###############################################################CODE POUR SE MONTER A LA FIN
-		/*while(Joystick1->GetRawButton(11) == false)
-		{
-			fenwick.afficherPosition();
-			Base.deplacer(Joystick1);
-		}
-
-		fenwick.monteeFinaleFenwick();
-		while(Joystick1->GetRawButton(12) == false)
-		{
-			Base.deplacer(Joystick1);
-		}
-		fenwick.monteeDuRobot();*/
-
-
-		/*if (Joystick1->GetRawButton(3))
-		{
-			fenwick.setConsigne(20);
-		}
-
-		if (Joystick1->GetRawButton(5))
-		{
-			fenwick.setConsigne(0);
-		}
-		if (Joystick1->GetRawButton(6))
-		{
-			fenwick.setConsigne(152);
-		}
-		if (Joystick1->GetRawButton(7))
-		{
-			fenwick.setConsigne(40);
-		}
-		if (Joystick1->GetRawButton(8))
-		{
-			position = 0;
-		}
-		if (Joystick1->GetRawButton(9))
-		{
-			if (etatFenwick == true)
-			{
-				pince.descendreDebutMatch();
-				fenwick.monteeDuRobot(Joystick1, anCo2z1, anCo2z2, servoFenwick);
-			}
-		}*/
-
-		//         ############ Valeurs encodeurs ############
-		//std::cout << "Encodeur droit : " << anCo2z1->Get() << std::endl;
-		//std::cout << "Encodeur gauche : " << anCo2z2->Get() << std::endl;
-
-		/*while(anCo2z1->Get()<TicQuonVeut)
-		 {
-		 TankDroit1->Set(0.2);
-		 TankDroit1->Set(-0.2);
-		 TankDroit2->Set(-0.2);
-		 TankGauche2->Set(0.2);
-
-		 std::printf("%d",anCo2z1->Get());
-		 if(anCo2z1->Get()>=720)
-		 sheet=true;
-
-
-		 }
-		 if(sheet==true)
-		 {
-		 TankDroit1->Set(0.0);
-		 TankDroit1->Set(-0.0);
-		 TankDroit2->Set(-0.0);
-		 TankGauche2->Set(0.0);
-		 }
-
-		 while(anCo2z2->Get()<TicQuonVeut)
-		 {
-		 TankDroit1->Set(0.2);
-		 TankDroit1->Set(-0.2);
-		 TankDroit2->Set(-0.2);
-		 TankGauche2->Set(0.2);
-
-		 std::printf("%d",anCo2z2->Get());
-		 if(anCo2z2->Get()>=2450)
-		 sheet=true;
-
-
-		 }
-		 if(sheet==true)
-		 {
-		 TankDroit1->Set(0.0);
-		 TankDroit1->Set(-0.0);
-		 TankDroit2->Set(-0.0);
-		 TankGauche2->Set(0.0);
-		 }
-		 */
-
+		// CODE POUR MONTER LE ROBOT
+//		if (Joystick1->GetRawButton(11))
+//		{
+//			Base.arreter();
+//			fenwick.monteeFinaleFenwick();
+//
+//			while(Joystick1->GetRawButton(11) == false)
+//			{
+//				Base.deplacer(Joystick1);
+//				Base.changerVitesse(Joystick1->GetRawButton(1));
+//				pince.ajuster(Joystick1->GetPOV());
+//			}
+//
+//			Base.arreter();
+//			fenwick.monteeDuRobot();
+//		}
 	}
 
 	void TestPeriodic()
