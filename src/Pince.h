@@ -32,8 +32,8 @@ public:
 	virtual ~Pince();
 
 private:
-	PWMVictorSPX* Bras;
-	PWMVictorSPX* Bag;
+	VictorSP* Bras;
+	VictorSP* Bag;
 	Servo* AntiRetour;
 	DigitalInput* Switch;
 

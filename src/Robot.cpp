@@ -28,6 +28,7 @@
 #include <Pince.h>
 #include <BaseRoulante.h>
 #include <DigitalInput.h>
+#include <AnalogInput.h>
 
 #include <IterativeRobot.h>
 #include <LiveWindow/LiveWindow.h>
@@ -38,33 +39,16 @@ class Robot: public frc::IterativeRobot
 {
 public:
 	Joystick* Joystick1;
-	PWMVictorSPX* TankDroit1;
-	PWMVictorSPX* TankDroit2;
-	PWMVictorSPX* TankGauche1;
-	Encoder* anCo2z1;
-	Encoder* anCo2z2;
-	Servo* servoFenwick;
-	std::Fenwick fenwick;
+	//std::Fenwick fenwick;
 	std::Pince pince;
 	std::BaseRoulante Base;
-	bool vitesseBallShifter;
-	bool sheet = false;
-	bool etatFenwick;
-	double TicQuonVeut = 0;
-	double x, y, z;
-	double vitesseDroite, vitesseGauche;
-	double ticQuonVeut = 0;
-	double distanceQuOnVeut;
-	double degre;
-	double ticQuOnA;
-	double toursQuOnA;
-	double position;
-	double consigne = 0.0;
+	AnalogInput* ai;
+
 
 	void RobotInit()
 	{
 		Joystick1 = new Joystick(0);
-		servoFenwick = new Servo(6);
+		ai = new AnalogInput(0);
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
@@ -72,7 +56,27 @@ public:
 
 	void AutonomousInit() override
 	{
+		Base.parcourir_distance(100);
 
+		std::string gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
+		std::string L = "L";
+
+		if(gameData[0] == L[0]) //Coté gauche
+		{
+			Base.rotation(-90);
+			Base.parcourir_distance(100);
+			Base.rotation(90);
+		}
+		else //Coté droit
+		{
+			Base.rotation(90);
+			Base.parcourir_distance(100);
+			Base.rotation(-90);
+		}
+
+		Base.parcourir_distance(100);
+
+		Base.arreter();
 	}
 
 	void AutonomousPeriodic()
@@ -87,15 +91,16 @@ public:
 
 	void TeleopPeriodic()
 	{
+		//std::cout<<ai->GetVoltage()<<std::endl;
 		Base.deplacer(Joystick1);
 
 		Base.changerVitesse(Joystick1->GetRawButton(1));
 
-		pince.attraperCube(Joystick1->GetRawButton(2));
+		//pince.attraperCube(Joystick1->GetRawButton(2));
 
-		pince.ejecterCube(Joystick1->GetRawButton(4));
+		//pince.ejecterCube(Joystick1->GetRawButton(4));
 
-		pince.afficherSwitch();
+		//pince.afficherSwitch();
 
 		pince.ajuster(Joystick1->GetPOV());
 

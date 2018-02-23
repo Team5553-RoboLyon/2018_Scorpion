@@ -93,7 +93,7 @@ void Fenwick::goToScale()
 void Fenwick::monteeFinaleFenwick(/*Pince* pince*/)
 {
 	consigne = 1500;
-	this->deplacerFenwick();
+	this->deplacer();
 }
 
 void Fenwick::monteeDuRobot()
