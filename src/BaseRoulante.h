@@ -23,19 +23,20 @@ public:
 
 	void arreter();
 	void deplacer(Joystick* joystick);
-	void afficherCodeuses();
-	void afficherGyro();
 	void changerVitesse(bool etatGachette);
-	void afficherPosition();
+
 	void parcourir_distance(int distance_a_parcourir);
 	void rotation(int angle_consigne);
+
+	void afficherCodeuses();
+	void afficherGyro();
 
 	virtual ~BaseRoulante();
 
 private:
-	VictorSP* BaseDroite1;
-	VictorSP* BaseDroite2;
-	VictorSP* BaseGauche;
+	PWMVictorSPX* BaseDroite1;
+	PWMVictorSPX* BaseDroite2;
+	PWMVictorSPX* BaseGauche;
 
 	Encoder* EncodeurDroit;
 	Encoder* EncodeurGauche;
@@ -44,10 +45,14 @@ private:
 
 	DoubleSolenoid* DoubleSolenoid1;
 
-	double vitesseDroite, vitesseGauche, y, z, r;
+	Timer* timer;
+
+	const double r = 8;
+
+	double vitesseDroite, vitesseGauche, y, z;
 	double distanceParcourueDroite, erreurDroite, erreurPrecedenteDroite, sommeErreursDroite, differenceErreursDroite;
 	double distanceParcourueGauche, erreurGauche, erreurPrecedenteGauche, sommeErreursGauche, differenceErreursGauche;
-	double angleParcouru, erreur, erreurPrecedente, sommeErreurs, differenceErreurs;
+	double erreurMoyenne, angleParcouru, erreur, erreurPrecedente, sommeErreurs, differenceErreurs;
 	double tolerance, kP, kI, kD;
 	bool vitesseBallShifter, etatPrecedentGachette;
 };

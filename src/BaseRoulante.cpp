@@ -11,15 +11,16 @@
 #include <PWMVictorSPX.h>
 #include <Encoder.h>
 #include <iostream>
+#include <Timer.h>
 
 namespace std
 {
 
 BaseRoulante::BaseRoulante()
 {
-	BaseDroite1 = new VictorSP(3);
-	BaseDroite2 = new VictorSP(4);
-	BaseGauche = new VictorSP(5);
+	BaseDroite1 = new PWMVictorSPX(3);
+	BaseDroite2 = new PWMVictorSPX(4);
+	BaseGauche = new PWMVictorSPX(5);
 
 	BaseGauche->Set(0);
 	BaseDroite1->Set(0);
@@ -28,6 +29,9 @@ BaseRoulante::BaseRoulante()
 	Gyro = new ADXRS450_Gyro();
 	Gyro->Calibrate();
 	Gyro->Reset();
+
+	timer = new Timer();
+
 
 	EncodeurDroit = new Encoder(2, 3,false, Encoder::EncodingType::k4X);
 	EncodeurDroit->Reset();
@@ -41,6 +45,7 @@ BaseRoulante::BaseRoulante()
 	vitesseBallShifter = false;
 	std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
 	etatPrecedentGachette = false;
+
 }
 
 void BaseRoulante::arreter()
@@ -72,63 +77,6 @@ void BaseRoulante::deplacer(Joystick* joystick)
 	BaseDroite2->Set(vitesseDroite);
 }
 
-void BaseRoulante::afficherCodeuses()
-{
-	std::cout << "Droit : " << EncodeurDroit->Get() << std::endl;
-	std::cout << "Gauche : " << EncodeurGauche->Get() << std::endl;
-}
-
-void BaseRoulante::afficherGyro()
-{
-	std::cout << "Angle : " << Gyro->GetAngle() << std::endl;
-}
-
-void BaseRoulante::parcourir_distance(int distance_a_parcourir)
-{
-	r = 7.62;
-	kP = 0.75;
-	kI = 0;
-	kD = 0;
-	tolerance = 20;
-
-	EncodeurGauche->Reset();
-	EncodeurDroit->Reset();
-
-	erreurPrecedenteDroite = distance_a_parcourir;
-	erreurPrecedenteGauche = distance_a_parcourir;
-	sommeErreursDroite = 0;
-	sommeErreursGauche = 0;
-
-	do
-	{
-		distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
-		distanceParcourueGauche = EncodeurGauche->Get() * r * 2 * M_PI / 360;
-
-		std::cout << "Droite : " << distanceParcourueDroite << std::endl;
-		std::cout << "Gauche : " << distanceParcourueGauche << std::endl;
-
-		erreurDroite = (distance_a_parcourir - distanceParcourueDroite) / abs(distance_a_parcourir);
-		erreurGauche = (distance_a_parcourir - distanceParcourueGauche) / abs(distance_a_parcourir);
-
-		sommeErreursDroite += erreurDroite;
-		sommeErreursGauche += erreurGauche;
-
-		differenceErreursDroite = erreurPrecedenteDroite - erreurDroite;
-		differenceErreursGauche = erreurPrecedenteGauche - erreurGauche;
-
-		vitesseDroite = kP * erreurDroite + kI * sommeErreursDroite + kD * differenceErreursDroite;
-		vitesseGauche = kP * erreurGauche + kI * sommeErreursGauche + kD * differenceErreursGauche;
-
-		BaseGauche->Set(-vitesseGauche);
-		BaseDroite1->Set(vitesseDroite);
-		BaseDroite2->Set(vitesseDroite);
-
-		erreurPrecedenteDroite = erreurDroite;
-		erreurPrecedenteGauche = erreurGauche;
-
-	} while (erreurDroite*abs(distance_a_parcourir) > tolerance || erreurDroite*abs(distance_a_parcourir) < -tolerance);
-}
-
 void BaseRoulante::changerVitesse(bool etatGachette)
 {
 	if(etatGachette && !etatPrecedentGachette) //Si la gachette est appuyée et qu'elle ne l'etait pas avant
@@ -154,10 +102,64 @@ void BaseRoulante::changerVitesse(bool etatGachette)
 	}
 }
 
-void BaseRoulante::rotation(int angle_consigne)
+void BaseRoulante::parcourir_distance(int distance_a_parcourir)
 {
+	//timer->Reset();
+	//timer->Start();
 	kP = 0.5;
 	kI = 0;
+	kD = 0;
+	tolerance = 20;
+
+	EncodeurGauche->Reset();
+	EncodeurDroit->Reset();
+
+	erreurPrecedenteDroite = distance_a_parcourir;
+	erreurPrecedenteGauche = distance_a_parcourir;
+	sommeErreursDroite = 0;
+	sommeErreursGauche = 0;
+
+	do
+	{
+		distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
+		//distanceParcourueGauche = EncodeurGauche->Get() * r * 2 * M_PI / 360;
+
+		std::cout << "Droite : " << distanceParcourueDroite << std::endl;
+		//std::cout << "Gauche : " << distanceParcourueGauche << std::endl;
+
+		erreurDroite = (distance_a_parcourir - distanceParcourueDroite) / abs(distance_a_parcourir);
+		//erreurGauche = (distance_a_parcourir - distanceParcourueGauche) / abs(distance_a_parcourir);
+
+		sommeErreursDroite += erreurDroite;
+		//sommeErreursGauche += erreurGauche;
+
+		differenceErreursDroite = erreurPrecedenteDroite - erreurDroite;
+		//differenceErreursGauche = erreurPrecedenteGauche - erreurGauche;
+
+		vitesseDroite = kP * erreurDroite + kI * sommeErreursDroite + kD * differenceErreursDroite;
+		//vitesseGauche = kP * erreurGauche + kI * sommeErreursGauche + kD * differenceErreursGauche;
+
+		BaseGauche->Set(-vitesseDroite);//-vitesseGauche);
+		BaseDroite1->Set(vitesseDroite);
+		BaseDroite2->Set(vitesseDroite);
+
+		erreurPrecedenteDroite = erreurDroite;
+		erreurPrecedenteGauche = erreurGauche;
+
+		erreurMoyenne = erreurDroite * abs(distance_a_parcourir); //(erreurDroite + erreurGauche) * abs(distance_a_parcourir) / 2;
+	} while (erreurMoyenne > tolerance || erreurMoyenne < -tolerance);  // || timer->Get() < 100);
+
+	BaseGauche->Set(0);
+	BaseDroite1->Set(0);
+	BaseDroite2->Set(0);
+}
+
+void BaseRoulante::rotation(int angle_consigne)
+{
+	timer->Reset();
+	timer->Start();
+	kP = 0.85;
+	kI = 0.0001;
 	kD = 0;
 	tolerance = 20;
 
@@ -186,7 +188,22 @@ void BaseRoulante::rotation(int angle_consigne)
 		BaseDroite2->Set(-vitesseDroite);
 
 		erreurPrecedente = erreur;
-	} while (erreur*abs(angle_consigne) > tolerance || erreur*abs(angle_consigne) < -tolerance);
+	} while (erreur*abs(angle_consigne) > tolerance || erreur*abs(angle_consigne) < -tolerance); // || timer->Get() < 100);
+
+	BaseGauche->Set(0);
+	BaseDroite1->Set(0);
+	BaseDroite2->Set(0);
+}
+
+void BaseRoulante::afficherCodeuses()
+{
+	std::cout << "Droit :  en tic-> " << EncodeurDroit->Get() << "      en cm-> " << EncodeurDroit->Get()* r * 2 * M_PI / 360 << std::endl;
+	std::cout << "Gauche :  en tic-> " << EncodeurGauche->Get() << "      en cm-> " << EncodeurGauche->Get()* r * 2 * M_PI / 360 << std::endl;
+}
+
+void BaseRoulante::afficherGyro()
+{
+	std::cout << "Angle : " << Gyro->GetAngle() << std::endl;
 }
 
 BaseRoulante::~BaseRoulante()

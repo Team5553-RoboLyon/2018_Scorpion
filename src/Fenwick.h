@@ -41,9 +41,6 @@ private:
 	Encoder* Encodeur;
 
 	double consigne, position, erreur, tolerance;
-	double kP = 10; //3 pour le 1er etage
-	double kI = 0.1;
-	double kD = 0;
 	double sommeErreurs = 0;
 	double differenceErreurs = 0;
 	double puissanceMoteur = 0;

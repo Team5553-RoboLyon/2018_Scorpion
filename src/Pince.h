@@ -23,28 +23,28 @@ public:
 
 	void attraperCube(bool boutonPresse);
 	void ejecterCube(bool boutonPresse);
-	void lever();
     void descendreDebutMatch();
-    void descendreFinMatch();
     void afficherSwitch();
     void ajuster(int pov);
+	void desactiverServo();
+	void activerServo();
 
 	virtual ~Pince();
 
 private:
-	VictorSP* Bras;
-	VictorSP* Bag;
+	PWMVictorSPX* Bras;
+	PWMVictorSPX* Bag;
 	Servo* AntiRetour;
 	DigitalInput* Switch;
 
-	const double vitesseAspiration = 0.45;
-	const double vitesseEjection = 0.3;
+	const double vitesseAspiration = -0.45;
+	const double vitesseEjection = 0.6;
+
 	const int dureeAspiration = 30;
 	const int dureeEjection = 10;
 
 	bool antiRetourEngage;
-    int incrementationAspiration = dureeAspiration;
-    int incrementationEjection = dureeEjection;
+    int incrementationAspiration, incrementationEjection;
 };
 
 }

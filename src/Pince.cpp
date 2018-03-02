@@ -20,14 +20,19 @@ namespace std {
 
 Pince::Pince()
 {
-	Bras = new VictorSP(7);
+    incrementationAspiration = dureeAspiration;
+    incrementationEjection = dureeEjection;
+
+	Bras = new PWMVictorSPX(7);
 	Bras->Set(0);
 
-	Bag = new VictorSP(8);
+	Bag = new PWMVictorSPX(8);
 	Bag->Set(0);
 
 	AntiRetour = new Servo(9);
-	AntiRetour->Set(0.99);
+	antiRetourEngage = false;
+	this->activerServo();
+
 	Switch = new DigitalInput(9);
 }
 
@@ -53,50 +58,30 @@ void Pince::ejecterCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(-vitesseEjection);
+		Bras->Set(vitesseEjection);
 		incrementationEjection = 0;
 	}
 	else if(incrementationEjection < dureeEjection)
 	{
-		Bras->Set(-vitesseEjection);
+		Bras->Set(vitesseEjection);
 	}
 	else if (incrementationEjection == dureeEjection)
 	{
 		Bras->Set(0);
 	}
-
 	incrementationEjection += 1;
-}
-
-void Pince::lever()
-{
-
 }
 
 void Pince::descendreDebutMatch()
 {
-	AntiRetour->SetAngle (0);
-
-	while(Switch->Get() == false)
-	{
-		//Bag->Set(-0.2);
-	}
-
-	AntiRetour->SetAngle (90);
-	Bag->Set (0);
-}
-
-void Pince::descendreFinMatch()
-{
-	AntiRetour->SetAngle (0);
+	this->desactiverServo();
 
 	while(Switch->Get() == false)
 	{
 		Bag->Set(-0.2);
 	}
 
-	AntiRetour->SetAngle (90);
-	Bag->Set (0);
+	this->activerServo();
 }
 
 void Pince::afficherSwitch()
@@ -108,34 +93,40 @@ void Pince::ajuster(int pov)
 {
 	if(pov == 0)
 	{
-		if(antiRetourEngage)
-		{
-			for(int i = 0; i<100; i++)
-			{
-				Bag->Set(-0.2);
-			}
-			AntiRetour->Set(0);
-			antiRetourEngage = false;
-		}
-		Bag->Set(-0.2);
+		this->desactiverServo();
+		Bag->Set(-0.5);
 	}
 	else if(pov == 180)
 	{
-		if(antiRetourEngage)
-		{
-			for(int i = 0; i<100; i++)
-			{
-				Bag->Set(-0.2);
-			}
-			AntiRetour->Set(0);
-			antiRetourEngage = false;
-		}
-		Bag->Set(0.2);
+		this->desactiverServo();
+		Bag->Set(0.3);
 	}
 	else
 	{
-		AntiRetour->Set(0.99);
+		this->activerServo();
+	}
+}
+
+void Pince::activerServo()
+{
+	if(antiRetourEngage == false)
+	{
+		Bag->Set(0);
+		AntiRetour->Set(1);
 		antiRetourEngage = true;
+	}
+}
+
+void Pince::desactiverServo()
+{
+	if(antiRetourEngage)
+	{
+		for(int i = 0; i<10000; i++)
+		{
+			Bag->Set(-0.5);
+		}
+		AntiRetour->Set(0.6);
+		antiRetourEngage = false;
 	}
 }
 
