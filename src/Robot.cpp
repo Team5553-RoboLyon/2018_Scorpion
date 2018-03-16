@@ -41,18 +41,32 @@ class Robot: public frc::IterativeRobot
 	{
 		Joystick1 = new Joystick(0);
 		ai = new AnalogInput(0);
-
-		CameraServer::GetInstance()->StartAutomaticCapture(0);
-		CameraServer::GetInstance()->SetSize(0);
 	}
 
 	void AutonomousInit() override
 	{
-
+		Base.resetPID();
 	}
 
 	void AutonomousPeriodic()
 	{
+		Base.parcourir_distance(300);
+		/*if(pinceEnBas == false)
+		{
+			pince.descendreDebutMatch();
+			pinceEnBas = true;
+		}
+
+		if (fenwick.goToSwitch() == true)
+		{
+			if (Base.parcourir_distance(300) < 25)
+			{
+				pince.ejecterCube(true);
+			}
+		}*/
+
+		/*static bool autoFinie = false;
+
 		if(autoFinie == false)
 		{
 			Base.parcourir_distance(90);
@@ -84,7 +98,7 @@ class Robot: public frc::IterativeRobot
 			autoFinie = true;
 		}
 
-		pince.ejecterCube(false);
+		pince.ejecterCube(false);*/
 	}
 
 	void TeleopInit()
@@ -94,6 +108,7 @@ class Robot: public frc::IterativeRobot
 
 	void TeleopPeriodic()
 	{
+		//fenwick.deplacer();
 		//std::cout<<ai->GetVoltage()<<std::endl;
 		Base.deplacer(Joystick1);
 
@@ -106,7 +121,7 @@ class Robot: public frc::IterativeRobot
 		pince.ajuster(Joystick1->GetPOV());
 
 		// CODE POUR MONTER LE FENWICK
-		if(Joystick1->GetRawButton(3))
+		/*if(Joystick1->GetRawButton(3))
 		{
 			Base.arreter();
 			fenwick.goToZero();
@@ -129,8 +144,9 @@ class Robot: public frc::IterativeRobot
 			Base.arreter();
 			fenwick.monteeFinaleFenwick();
 
-			while(Joystick1->GetRawButton(7) == false)
+			while(Joystick1->GetRawButton(8) == false)
 			{
+				fenwick.deplacer();
 				Base.deplacer(Joystick1);
 				Base.changerVitesse(Joystick1->GetRawButton(1));
 				pince.ajuster(Joystick1->GetPOV());
@@ -139,6 +155,19 @@ class Robot: public frc::IterativeRobot
 			Base.arreter();
 			fenwick.monteeDuRobot();
 		}
+
+		if (Joystick1->GetRawButton(11))
+		{
+			fenwick.monter();
+		}
+		else if (Joystick1->GetRawButton(12))
+		{
+			fenwick.descendre();
+		}
+		else
+		{
+			fenwick.stop();
+		}*/
 	}
 
 	void TestPeriodic()
@@ -153,7 +182,8 @@ private:
 	std::Fenwick fenwick;
 	std::Pince pince;
 	std::BaseRoulante Base;
-	bool autoFinie = false;
+
+	bool pinceEnBas = false;
 
 };
 

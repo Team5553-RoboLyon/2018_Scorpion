@@ -37,8 +37,8 @@ private:
 	Servo* AntiRetour;
 	DigitalInput* Switch;
 
-	const double vitesseAspiration = -0.45;
-	const double vitesseEjection = 0.6;
+	const double vitesseAspiration = 0.45;
+	const double vitesseEjection = -0.6;
 
 	const int dureeAspiration = 30;
 	const int dureeEjection = 10;

@@ -28,6 +28,8 @@ public:
 	void parcourir_distance(int distance_a_parcourir);
 	void rotation(int angle_consigne);
 
+	void resetPID();
+
 	void afficherCodeuses();
 	void afficherGyro();
 
@@ -55,6 +57,7 @@ private:
 	double erreurMoyenne, angleParcouru, erreur, erreurPrecedente, sommeErreurs, differenceErreurs;
 	double tolerance, kP, kI, kD;
 	bool vitesseBallShifter, etatPrecedentGachette;
+	double distance_a_parcourir;
 };
 
 }

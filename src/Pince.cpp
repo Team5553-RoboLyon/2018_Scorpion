@@ -78,7 +78,7 @@ void Pince::descendreDebutMatch()
 
 	while(Switch->Get() == false)
 	{
-		Bag->Set(-0.2);
+		Bag->Set(0.2);
 	}
 
 	this->activerServo();
@@ -94,12 +94,12 @@ void Pince::ajuster(int pov)
 	if(pov == 0)
 	{
 		this->desactiverServo();
-		Bag->Set(-0.5);
+		Bag->Set(-0.6);
 	}
-	else if(pov == 180)
+	else if(pov == 180 && Switch->Get() == false)
 	{
 		this->desactiverServo();
-		Bag->Set(0.3);
+		Bag->Set(0.35);
 	}
 	else
 	{
@@ -123,7 +123,7 @@ void Pince::desactiverServo()
 	{
 		for(int i = 0; i<10000; i++)
 		{
-			Bag->Set(-0.5);
+			Bag->Set(-0.75);
 		}
 		AntiRetour->Set(0.6);
 		antiRetourEngage = false;

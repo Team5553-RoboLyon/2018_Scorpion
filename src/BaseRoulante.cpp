@@ -104,8 +104,8 @@ void BaseRoulante::changerVitesse(bool etatGachette)
 
 void BaseRoulante::parcourir_distance(int distance_a_parcourir)
 {
-	//timer->Reset();
-	//timer->Start();
+	/*timer->Reset();
+	timer->Start();
 	kP = 0.5;
 	kI = 0;
 	kD = 0;
@@ -147,11 +147,32 @@ void BaseRoulante::parcourir_distance(int distance_a_parcourir)
 		erreurPrecedenteGauche = erreurGauche;
 
 		erreurMoyenne = erreurDroite * abs(distance_a_parcourir); //(erreurDroite + erreurGauche) * abs(distance_a_parcourir) / 2;
-	} while (erreurMoyenne > tolerance || erreurMoyenne < -tolerance);  // || timer->Get() < 100);
+	} while (erreurMoyenne > tolerance || erreurMoyenne < -tolerance || timer->Get() < 4);
 
 	BaseGauche->Set(0);
 	BaseDroite1->Set(0);
-	BaseDroite2->Set(0);
+	BaseDroite2->Set(0);*/
+
+	kP = 0.75;
+	kI = 0;
+	kD = 0;
+	tolerance = 20;
+
+	distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
+
+	std::cout << "Droite : " << distanceParcourueDroite << std::endl;
+
+	erreurDroite = (distance_a_parcourir - distanceParcourueDroite) / abs(distance_a_parcourir);
+	sommeErreursDroite += erreurDroite;
+	differenceErreursDroite = erreurPrecedenteDroite - erreurDroite;
+
+	vitesseDroite = kP * erreurDroite + kI * sommeErreursDroite + kD * differenceErreursDroite;
+
+	BaseGauche->Set(-vitesseDroite);//-vitesseGauche);
+	BaseDroite1->Set(vitesseDroite);
+	BaseDroite2->Set(vitesseDroite);
+
+	erreurPrecedenteDroite = erreurDroite;
 }
 
 void BaseRoulante::rotation(int angle_consigne)
@@ -188,11 +209,22 @@ void BaseRoulante::rotation(int angle_consigne)
 		BaseDroite2->Set(-vitesseDroite);
 
 		erreurPrecedente = erreur;
-	} while (erreur*abs(angle_consigne) > tolerance || erreur*abs(angle_consigne) < -tolerance); // || timer->Get() < 100);
+	} while (erreur*abs(angle_consigne) > tolerance || erreur*abs(angle_consigne) < -tolerance || timer->Get() < 3);
 
 	BaseGauche->Set(0);
 	BaseDroite1->Set(0);
 	BaseDroite2->Set(0);
+}
+
+void BaseRoulante::resetPID()
+{
+	EncodeurDroit->Reset();
+	EncodeurGauche->Reset();
+
+	erreurPrecedenteDroite = distance_a_parcourir;
+	erreurPrecedenteGauche = distance_a_parcourir;
+	sommeErreursDroite = 0;
+	sommeErreursGauche = 0;
 }
 
 void BaseRoulante::afficherCodeuses()

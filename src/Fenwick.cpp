@@ -44,41 +44,49 @@ Fenwick::Fenwick()
 
 void Fenwick::goToZero()
 {
+	std::cout<<"Go to zero"<<std::endl;
 	consigne = 0;
 	this->deplacer();
 }
 
 void Fenwick::goToSwitch()
 {
-	consigne = 450;
+	std::cout<<"Go to switch"<<std::endl;
+	consigne = 430;
 	this->deplacer();
 }
 
 void Fenwick::goToScale()
 {
-	consigne = 1450;
+	std::cout<<"Go to scale"<<std::endl;
+	consigne = 1435;
 	this->deplacer();
 }
 
 void Fenwick::monteeFinaleFenwick()
 {
-	consigne = 1470;
+	std::cout<<"Montee final du fenwick"<<std::endl;
+	consigne = 1455;
 	this->deplacer();
 }
 
-void Fenwick::deplacer()
+bool Fenwick::deplacer()
 {
-	do
+	bool retour;
+	//AddSequential
+	/*position = Encodeur->Get();
+	erreur = (consigne - position);
+
+	if(erreur > tolerance || erreur < -tolerance)
 	{
-		position = Encodeur->Get();
-		erreur = (consigne - position);
 		if (erreur > tolerance)
 		{
 			this->desactiverServo();
-			fenwick1->Set(0.65);
-			fenwick2->Set(0.65);
-			fenwick3->Set(0.65);
+			fenwick1->Set(0.3);
+			fenwick2->Set(0.3);
+			fenwick3->Set(0.3);
 			std::cout << "Ca monte :  " << position << std::endl;
+			retour = false;
 		}
 		else if(erreur < -tolerance)
 		{
@@ -87,34 +95,39 @@ void Fenwick::deplacer()
 			fenwick2->Set(-0.3);
 			fenwick3->Set(-0.3);
 			std::cout << "Ca descend :  " << position << std::endl;
+			retour = false;
 		}
-		else
-		{
-			this->activerServo();
-			std::cout << "C'est gagné :  " << position << std::endl;
-		}
-	} while(erreur > tolerance || erreur < -tolerance);
+	}
+	else
+	{
+		this->activerServo();
+		std::cout << "C'est gagné :  " << position << std::endl;
+		retour = true;
+	}
+	*/
+	return true;
 }
 
 void Fenwick::monteeDuRobot()
 {
+	std::cout<<"Montee du robot"<<std::endl;
 	this->desactiverServo();
 
 	while(Encodeur->Get() > 675)
 	{
-		fenwick1->Set(-0.2);
-		fenwick2->Set(-0.2);
-		fenwick3->Set(-0.2);
+		fenwick1->Set(-0.4);
+		fenwick2->Set(-0.4);
+		fenwick3->Set(-0.4);
 	}
 
-	while(Encodeur->Get() > 360)
+	while(Encodeur->Get() > 350)
 	{
 		fenwick1->Set(-1);
 		fenwick2->Set(-1);
 		fenwick3->Set(-1);
 	}
 
-	servo->Set(0.73);
+	servo->Set(1);
 	fenwick1->Set(0);
 	fenwick2->Set(0);
 	fenwick3->Set(0);
@@ -128,8 +141,9 @@ void Fenwick::activerServo()
 		fenwick1->Set(0);
 		fenwick2->Set(0);
 		fenwick3->Set(0);
-		servo->Set(0);
+		servo->Set(0.5);
 		etatServo = true;
+		std::cout<<"Fin activation du servo"<<std::endl;
 	}
 }
 
@@ -141,9 +155,9 @@ void Fenwick::desactiverServo()
 		std::cout<<"Debut desactivation du servo"<<std::endl;
 		do
 		{
-		fenwick1->Set(0.4);
-		fenwick2->Set(0.4);
-		fenwick3->Set(0.4);
+		fenwick1->Set(0.6);
+		fenwick2->Set(0.6);
+		fenwick3->Set(0.6);
 		}
 		while(Encodeur->Get() < a+25);
 
@@ -151,7 +165,7 @@ void Fenwick::desactiverServo()
 		fenwick2->Set(0);
 		fenwick3->Set(0);
 
-		servo->Set(0.35);
+		servo->Set(0.75);
 		etatServo = false;
 
 		std::cout<<"Fin desactivation du servo"<<std::endl;
@@ -169,6 +183,27 @@ Fenwick::~Fenwick()
 	delete fenwick2;
 	delete fenwick3;
 	delete Encodeur;
+}
+
+void Fenwick::monter()
+{
+	fenwick1->Set(0.4);
+	fenwick2->Set(0.4);
+	fenwick3->Set(0.4);
+}
+
+void Fenwick::descendre()
+{
+	fenwick1->Set(-0.4);
+	fenwick2->Set(-0.4);
+	fenwick3->Set(-0.4);
+}
+
+void Fenwick::stop()
+{
+	fenwick1->Set(0);
+	fenwick2->Set(0);
+	fenwick3->Set(0);
 }
 
 }

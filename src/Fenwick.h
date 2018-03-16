@@ -20,7 +20,7 @@ namespace std {
 class Fenwick {
 public:
 	Fenwick();
-	void deplacer();
+	bool deplacer();
 	void goToZero();
 	void goToSwitch();
 	void goToScale();
@@ -30,6 +30,12 @@ public:
 	void desactiverServo();
 	void activerServo();
 	void afficherPosition();
+
+	void monter();
+
+	void descendre();
+
+	void stop();
 
 	virtual ~Fenwick();
 
