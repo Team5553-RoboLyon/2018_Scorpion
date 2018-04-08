@@ -9,11 +9,11 @@
 #define SRC_BASEROULANTE_H_
 #include "WPILib.h"
 #include <Joystick.h>
-#include <PWMVictorSPX.h>
+#include <VictorSP.h>
 #include <Encoder.h>
 #include <iostream>
 
-namespace std
+namespace rbl
 {
 
 class BaseRoulante
@@ -25,8 +25,9 @@ public:
 	void deplacer(Joystick* joystick);
 	void changerVitesse(bool etatGachette);
 
-	void parcourir_distance(int distance_a_parcourir);
-	void rotation(int angle_consigne);
+	//Fonctions periode auto qui retournent l'erreur du PID en cm et en degrés
+	double parcourir_distance(int distance_a_parcourir);
+	double rotation(const int angle_consigne);
 
 	void resetPID();
 
@@ -36,9 +37,10 @@ public:
 	virtual ~BaseRoulante();
 
 private:
-	PWMVictorSPX* BaseDroite1;
-	PWMVictorSPX* BaseDroite2;
-	PWMVictorSPX* BaseGauche;
+	VictorSP* BaseDroite1;
+	VictorSP* BaseDroite2;
+	VictorSP* BaseGauche1;
+	VictorSP* BaseGauche2;
 
 	Encoder* EncodeurDroit;
 	Encoder* EncodeurGauche;
@@ -55,9 +57,8 @@ private:
 	double distanceParcourueDroite, erreurDroite, erreurPrecedenteDroite, sommeErreursDroite, differenceErreursDroite;
 	double distanceParcourueGauche, erreurGauche, erreurPrecedenteGauche, sommeErreursGauche, differenceErreursGauche;
 	double erreurMoyenne, angleParcouru, erreur, erreurPrecedente, sommeErreurs, differenceErreurs;
-	double tolerance, kP, kI, kD;
+	double kP, kI, kD;
 	bool vitesseBallShifter, etatPrecedentGachette;
-	double distance_a_parcourir;
 };
 
 }

@@ -15,7 +15,7 @@
 #include <Servo.h>
 #include <Fenwick.h>
 
-namespace std {
+namespace rbl {
 
 class Pince {
 public:
@@ -23,28 +23,28 @@ public:
 
 	void attraperCube(bool boutonPresse);
 	void ejecterCube(bool boutonPresse);
-    void descendreDebutMatch();
-    void afficherSwitch();
+
     void ajuster(int pov);
-	void desactiverServo();
-	void activerServo();
+	void goToZero(bool avant);
+	void goToSwitch(bool avant);
+	void goToScale(bool avant);
+	void deplacer();
 
 	virtual ~Pince();
 
 private:
-	PWMVictorSPX* Bras;
-	PWMVictorSPX* Bag;
-	Servo* AntiRetour;
-	DigitalInput* Switch;
-
-	const double vitesseAspiration = 0.45;
-	const double vitesseEjection = -0.6;
+	PWMVictorSPX* Roues;
+	PWMVictorSPX* Pivot;
+	Encoder* Encodeur;
+	DoubleSolenoid* Verin;
 
 	const int dureeAspiration = 30;
 	const int dureeEjection = 10;
 
-	bool antiRetourEngage;
     int incrementationAspiration, incrementationEjection;
+
+	double kP, kI, kD;
+	double vitesse, consigne, positionBras, erreur, sommeErreurs, differenceErreurs, erreurPrecedente;
 };
 
 }

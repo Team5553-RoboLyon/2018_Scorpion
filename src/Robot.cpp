@@ -24,9 +24,6 @@
 #include <DoubleSolenoid.h>
 #include "WPILib.h"
 #include <PWMVictorSPX.h>
-#include <Fenwick.h>
-#include <Pince.h>
-#include <BaseRoulante.h>
 #include <DigitalInput.h>
 #include <AnalogInput.h>
 
@@ -35,70 +32,118 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 
+#include <Fenwick.h>
+#include <Pince.h>
+#include <BaseRoulante.h>
+#include "Grappin.h"
+#include "Definitions.h"
+
 class Robot: public frc::IterativeRobot
 {
+
+
 	void RobotInit()
 	{
 		Joystick1 = new Joystick(0);
 		ai = new AnalogInput(0);
+
+		//CameraServer::GetInstance()->StartAutomaticCapture(0);
+		//CameraServer::GetInstance()->SetSize(0);
 	}
 
 	void AutonomousInit() override
 	{
-		Base.resetPID();
+		std::string gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
+
+		if (gameData[0] == 'L')
+		{
+			rotation1 = -90;
+			rotation2 = 90;
+		}
+		else
+		{
+			rotation1 = 90;
+			rotation2 = -90;
+		}
+		base.resetPID();
 	}
 
 	void AutonomousPeriodic()
 	{
-		Base.parcourir_distance(300);
-		/*if(pinceEnBas == false)
+		/*
+		 * PIDs remarques :
+		 * Les fonctions actualisent les vitesses et renvoient l'erreur
+		 * Pour eviter des repetitions, on met la commande de changement d'etat a la fin du switch
+		 */
+
+		static unsigned int etat = 1;
+		static const double toleranceAvancer = 5; // TODO  TOLERANCE A DETERMINER
+		static const double toleranceRotation = 5; // TODO  TOLERANCE A DETERMINER
+		double erreur = 1000;
+
+		switch(etat)
 		{
-			pince.descendreDebutMatch();
-			pinceEnBas = true;
+		//Avancer
+		case 1:
+			erreur = base.parcourir_distance(100);
+			break;
+
+		//Tourner
+		case 2:
+			erreur = base.rotation(rotation1);
+			break;
+
+		//Avancer
+		case 3:
+			erreur = base.parcourir_distance(100);
+			break;
+
+		//Tourner
+		case 4:
+			erreur = base.rotation(rotation2);
+			break;
+
+		//Avancer
+		case 5:
+			erreur = base.parcourir_distance(100);
+			break;
+
+		// TODO Descendre pince
+		case 6:
+			etat++;
+			break;
+
+		//Ejecter cube
+		case 7:
+			pince.ejecterCube(true); //On simule un bouton appuyé et on passe au suivant
+			etat++;
+			break;
+
+		//Fin
+		default:
+			pince.ejecterCube(false); //On re-appelle ejecter cube en simulant un bouton relaché pour que la pince s'arrete
+			break;
 		}
 
-		if (fenwick.goToSwitch() == true)
+		//Si un PID est consideré comme fini alors on passe à l'etat suivant et on reset capteurs et variables
+		if(etat == 1 || etat == 3 || etat == 5)
 		{
-			if (Base.parcourir_distance(300) < 25)
+			if(erreur < toleranceAvancer && erreur > -toleranceAvancer)
 			{
-				pince.ejecterCube(true);
+				etat++;
+				base.arreter();
+				base.resetPID();
 			}
-		}*/
-
-		/*static bool autoFinie = false;
-
-		if(autoFinie == false)
-		{
-			Base.parcourir_distance(90);
-
-			std::string gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-			std::string L = "L";
-
-			if(gameData[0] == L[0]) //Coté gauche
-			{
-				Base.rotation(-90);
-				Base.parcourir_distance(110);
-				Base.rotation(90);
-			}
-			else //Coté droit
-			{
-				Base.rotation(90);
-				Base.parcourir_distance(110);
-				Base.rotation(-90);
-			}
-
-			fenwick.goToSwitch();
-
-			Base.parcourir_distance(100);
-
-			pince.ejecterCube(true);
-
-			Base.arreter();
-
-			autoFinie = true;
 		}
-
-		pince.ejecterCube(false);*/
+		else if(etat == 2 || etat == 4)
+		{
+			if(erreur < toleranceRotation && erreur > -toleranceRotation)
+			{
+				etat++;
+				base.arreter();
+				base.resetPID();
+			}
+		}
 	}
 
 	void TeleopInit()
@@ -108,66 +153,44 @@ class Robot: public frc::IterativeRobot
 
 	void TeleopPeriodic()
 	{
-		//fenwick.deplacer();
 		//std::cout<<ai->GetVoltage()<<std::endl;
-		Base.deplacer(Joystick1);
 
-		Base.changerVitesse(Joystick1->GetRawButton(1));
+		base.deplacer(Joystick1);
+		base.changerVitesse(Joystick1->GetRawButton(1));
+		//base.afficherCodeuses();
+		//base.afficherGyro();
 
-		pince.attraperCube(Joystick1->GetRawButton(2));
+		pince.attraperCube(Joystick1->GetRawButton(3));
+		pince.ejecterCube(Joystick1->GetRawButton(4));
 
-		pince.ejecterCube(Joystick1->GetRawButton(5));
+		grappin.treuilMonter(Joystick1->GetRawButton(6));
 
-		pince.ajuster(Joystick1->GetPOV());
-
-		// CODE POUR MONTER LE FENWICK
-		/*if(Joystick1->GetRawButton(3))
+		if(Joystick1->GetRawButton(11))
 		{
-			Base.arreter();
-			fenwick.goToZero();
-
+			pince.goToZero(true);
 		}
 		else if(Joystick1->GetRawButton(9))
 		{
-			Base.arreter();
-			fenwick.goToSwitch();
+			pince.goToSwitch(true);
 		}
-		else if(Joystick1->GetRawButton(4))
+		else if(Joystick1->GetRawButton(7))
 		{
-			Base.arreter();
-			fenwick.goToScale();
+			pince.goToScale(true);
 		}
-
-		// CODE POUR MONTER LE ROBOT
-		if (Joystick1->GetRawButton(7))
+		else if(Joystick1->GetRawButton(12))
 		{
-			Base.arreter();
-			fenwick.monteeFinaleFenwick();
-
-			while(Joystick1->GetRawButton(8) == false)
-			{
-				fenwick.deplacer();
-				Base.deplacer(Joystick1);
-				Base.changerVitesse(Joystick1->GetRawButton(1));
-				pince.ajuster(Joystick1->GetPOV());
-			}
-
-			Base.arreter();
-			fenwick.monteeDuRobot();
+			pince.goToZero(false);
+		}
+		else if(Joystick1->GetRawButton(10))
+		{
+			pince.goToSwitch(false);
+		}
+		else if(Joystick1->GetRawButton(8))
+		{
+			pince.goToScale(false);
 		}
 
-		if (Joystick1->GetRawButton(11))
-		{
-			fenwick.monter();
-		}
-		else if (Joystick1->GetRawButton(12))
-		{
-			fenwick.descendre();
-		}
-		else
-		{
-			fenwick.stop();
-		}*/
+		pince.deplacer();
 	}
 
 	void TestPeriodic()
@@ -176,15 +199,15 @@ class Robot: public frc::IterativeRobot
 	}
 
 private:
+
+	int rotation1, rotation2;
+
 	Joystick* Joystick1;
 	AnalogInput* ai;
 
-	std::Fenwick fenwick;
-	std::Pince pince;
-	std::BaseRoulante Base;
-
-	bool pinceEnBas = false;
-
+	rbl::BaseRoulante base;
+	rbl::Pince pince;
+	rbl::Grappin grappin;
 };
 
 START_ROBOT_CLASS(Robot)

@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <Pince.h>
+#include <Definitions.h>
+
 #include <VictorSP.h>
 #include <PWMVictorSPX.h>
 #include "WPILib.h"
@@ -16,40 +18,45 @@
 #include <Servo.h>
 #include <Fenwick.h>
 
-namespace std {
+namespace rbl {
 
 Pince::Pince()
 {
     incrementationAspiration = dureeAspiration;
     incrementationEjection = dureeEjection;
 
-	Bras = new PWMVictorSPX(7);
-	Bras->Set(0);
+	consigne = 0;
+	sommeErreurs = 0;
+	differenceErreurs = 0;
+	erreurPrecedente = 0;
 
-	Bag = new PWMVictorSPX(8);
-	Bag->Set(0);
+	Roues = new PWMVictorSPX(PWM_ROUES);
+	Roues->Set(0);
 
-	AntiRetour = new Servo(9);
-	antiRetourEngage = false;
-	this->activerServo();
+	Pivot = new PWMVictorSPX(PWM_PIVOT);
+	Pivot->Set(0);
 
-	Switch = new DigitalInput(9);
+	Encodeur = new Encoder(DIO_ENCODEUR_PIVOT_A, DIO_ENCODEUR_PIVOT_B,false, Encoder::EncodingType::k4X);
+	Encodeur->Reset();
+
+	Verin = new DoubleSolenoid(PCM_VERIN_PINCE_A, PCM_VERIN_PINCE_B);
+	Verin->Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Pince::attraperCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(vitesseAspiration);
 		incrementationAspiration = 0;
 	}
 	else if(incrementationAspiration < dureeAspiration)
 	{
-		Bras->Set(vitesseAspiration);
+		Roues->Set(0.5);
 	}
 	else if (incrementationAspiration == dureeAspiration)
 	{
-		Bras->Set(0);
+		Roues->Set(0);
+		Verin->Set(frc::DoubleSolenoid::Value::kReverse);
 	}
 	incrementationAspiration += 1;
 }
@@ -58,84 +65,86 @@ void Pince::ejecterCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
 	{
-		Bras->Set(vitesseEjection);
 		incrementationEjection = 0;
 	}
 	else if(incrementationEjection < dureeEjection)
 	{
-		Bras->Set(vitesseEjection);
+		Roues->Set(0.5);
 	}
 	else if (incrementationEjection == dureeEjection)
 	{
-		Bras->Set(0);
+		Roues->Set(0);
+		Verin->Set(frc::DoubleSolenoid::Value::kForward);
+
 	}
 	incrementationEjection += 1;
 }
 
-void Pince::descendreDebutMatch()
+void Pince::deplacer()
 {
-	this->desactiverServo();
+	kP = 0;
+	kI = 0;
+	kD = 0;
+	positionBras = Encodeur->Get();
 
-	while(Switch->Get() == false)
-	{
-		Bag->Set(0.2);
-	}
+	std::cout << "Bras : " << positionBras << std::endl;
 
-	this->activerServo();
+	erreur = consigne - positionBras;
+	sommeErreurs += erreur;
+	differenceErreurs = erreurPrecedente - erreur;
+
+	vitesse = kP * erreur + kI * sommeErreurs + kD * differenceErreurs;
+
+	Pivot->Set(vitesse);
+
+	erreurPrecedente = erreur;
 }
 
-void Pince::afficherSwitch()
+void Pince::goToZero(bool avant)
 {
-	std::cout << "Switch : " << Switch->Get() << std::endl;
+	consigne = 0;
+	if (!avant)
+	{
+		consigne = -consigne;
+	}
+}
+
+void Pince::goToSwitch(bool avant)
+{
+	consigne = 0;
+	if (!avant)
+	{
+		consigne = -consigne;
+	}
+}
+
+void Pince::goToScale(bool avant)
+{
+	consigne = 0;
+	if (!avant)
+	{
+		consigne = -consigne;
+	}
 }
 
 void Pince::ajuster(int pov)
 {
 	if(pov == 0)
 	{
-		this->desactiverServo();
-		Bag->Set(-0.6);
+		consigne += 0;
 	}
-	else if(pov == 180 && Switch->Get() == false)
+	else if(pov == 180)
 	{
-		this->desactiverServo();
-		Bag->Set(0.35);
-	}
-	else
-	{
-		this->activerServo();
-	}
-}
-
-void Pince::activerServo()
-{
-	if(antiRetourEngage == false)
-	{
-		Bag->Set(0);
-		AntiRetour->Set(1);
-		antiRetourEngage = true;
-	}
-}
-
-void Pince::desactiverServo()
-{
-	if(antiRetourEngage)
-	{
-		for(int i = 0; i<10000; i++)
-		{
-			Bag->Set(-0.75);
-		}
-		AntiRetour->Set(0.6);
-		antiRetourEngage = false;
+		consigne -= 0;
 	}
 }
 
 Pince::~Pince()
 {
-	delete Bras;
-	delete Bag;
-	delete AntiRetour;
-	delete Switch;
+	delete Roues;
+	delete Pivot;
+	delete Encodeur;
+	delete Verin;
 }
 
 }
