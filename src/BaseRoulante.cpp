@@ -23,28 +23,38 @@ BaseRoulante::BaseRoulante()
 	BaseGauche1 = new VictorSP(PWM_BASE_GAUCHE_1);
 	BaseGauche2 = new VictorSP(PWM_BASE_GAUCHE_2);
 
+
+	Gyro = new ADXRS450_Gyro();
+
+
+	EncodeurDroit = new Encoder(DIO_ENCODEUR_DROIT_A, DIO_ENCODEUR_DROIT_B,false, Encoder::EncodingType::k4X);
+
+
+	EncodeurGauche = new Encoder(DIO_ENCODEUR_GAUCHE_A, DIO_ENCODEUR_GAUCHE_B, false, Encoder::EncodingType::k4X);
+
+
+	DoubleSolenoid1 = new DoubleSolenoid(PCM_BALLSHIFTER_A, PCM_BALLSHIFTER_B);
+
+}
+
+void BaseRoulante::baseInit()
+{
 	BaseDroite1->Set(0);
 	BaseDroite2->Set(0);
 	BaseGauche1->Set(0);
 	BaseGauche2->Set(0);
 
-	Gyro = new ADXRS450_Gyro();
 	Gyro->Calibrate();
 	Gyro->Reset();
 
-	EncodeurDroit = new Encoder(DIO_ENCODEUR_DROIT_A, DIO_ENCODEUR_DROIT_B,false, Encoder::EncodingType::k4X);
 	EncodeurDroit->Reset();
-
-	EncodeurGauche = new Encoder(DIO_ENCODEUR_GAUCHE_A, DIO_ENCODEUR_GAUCHE_B, false, Encoder::EncodingType::k4X);
 	EncodeurGauche->Reset();
 
-	DoubleSolenoid1 = new DoubleSolenoid(PCM_BALLSHIFTER_A, PCM_BALLSHIFTER_B);
 	DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
 
 	vitesseBallShifter = false;
 	std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
 	etatPrecedentGachette = false;
-
 }
 
 void BaseRoulante::arreter()

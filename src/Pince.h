@@ -13,7 +13,6 @@
 #include <DigitalInput.h>
 #include <Encoder.h>
 #include <Servo.h>
-#include <Fenwick.h>
 
 namespace rbl {
 
@@ -23,9 +22,13 @@ public:
 
 	void attraperCube(bool boutonPresse);
 	void ejecterCube(bool boutonPresse);
+	void pinceIntermediaire();
+	void pinceInit();
 
-    void ajuster(int pov);
-	void goToZero(bool avant);
+	void afficherPosition();
+	void ajuster(int pov);
+	void goToMilieu();
+	void goToEchangeur(bool avant);
 	void goToSwitch(bool avant);
 	void goToScale(bool avant);
 	void deplacer();
@@ -37,9 +40,10 @@ private:
 	PWMVictorSPX* Pivot;
 	Encoder* Encodeur;
 	DoubleSolenoid* Verin;
+	int incrementinter=0;
 
-	const int dureeAspiration = 30;
-	const int dureeEjection = 10;
+	const int dureeAspiration = 70;
+	const int dureeEjection = 25;
 
     int incrementationAspiration, incrementationEjection;
 

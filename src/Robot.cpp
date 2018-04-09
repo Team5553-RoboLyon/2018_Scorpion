@@ -32,7 +32,6 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 
-#include <Fenwick.h>
 #include <Pince.h>
 #include <BaseRoulante.h>
 #include "Grappin.h"
@@ -46,6 +45,8 @@ class Robot: public frc::IterativeRobot
 	{
 		Joystick1 = new Joystick(0);
 		ai = new AnalogInput(0);
+		pince.pinceInit();
+		base.baseInit();
 
 		//CameraServer::GetInstance()->StartAutomaticCapture(0);
 		//CameraServer::GetInstance()->SetSize(0);
@@ -97,6 +98,7 @@ class Robot: public frc::IterativeRobot
 		case 3:
 			erreur = base.parcourir_distance(100);
 			break;
+
 
 		//Tourner
 		case 4:
@@ -160,14 +162,17 @@ class Robot: public frc::IterativeRobot
 		//base.afficherCodeuses();
 		//base.afficherGyro();
 
-		pince.attraperCube(Joystick1->GetRawButton(3));
-		pince.ejecterCube(Joystick1->GetRawButton(4));
+		pince.attraperCube(Joystick1->GetRawButton(2));
+		pince.ejecterCube(Joystick1->GetRawButton(3));
 
-		grappin.treuilMonter(Joystick1->GetRawButton(6));
+		pince.afficherPosition();
+
+		pince.ajuster(Joystick1->GetPOV());
+		pince.pinceIntermediaire();
 
 		if(Joystick1->GetRawButton(11))
 		{
-			pince.goToZero(true);
+			pince.goToEchangeur(true);
 		}
 		else if(Joystick1->GetRawButton(9))
 		{
@@ -179,7 +184,7 @@ class Robot: public frc::IterativeRobot
 		}
 		else if(Joystick1->GetRawButton(12))
 		{
-			pince.goToZero(false);
+			pince.goToEchangeur(false);
 		}
 		else if(Joystick1->GetRawButton(10))
 		{
@@ -187,10 +192,11 @@ class Robot: public frc::IterativeRobot
 		}
 		else if(Joystick1->GetRawButton(8))
 		{
-			pince.goToScale(false);
+			pince.goToMilieu();
 		}
-
 		pince.deplacer();
+
+		//grappin.treuilMonter(Joystick1->GetRawButton(6));
 	}
 
 	void TestPeriodic()
