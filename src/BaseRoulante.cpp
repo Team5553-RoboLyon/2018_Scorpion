@@ -115,14 +115,14 @@ void BaseRoulante::changerVitesse(bool etatGachette)
 
 double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 {
-	kP = 0.75;
+	kP = 0.018; //0.009
 	kI = 0;
 	kD = 0;
 	distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
 
 	std::cout << "Droite : " << distanceParcourueDroite << std::endl;
 
-	erreurDroite = (distance_a_parcourir - distanceParcourueDroite) / abs(distance_a_parcourir);
+	erreurDroite = distance_a_parcourir - distanceParcourueDroite;
 	sommeErreursDroite += erreurDroite;
 	differenceErreursDroite = erreurPrecedenteDroite - erreurDroite;
 
@@ -135,20 +135,20 @@ double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 
 	erreurPrecedenteDroite = erreurDroite;
 
-	return erreurPrecedenteDroite * abs(distance_a_parcourir); // Erreur en cm
+	return erreurPrecedenteDroite; // Erreur en cm
 }
 
 double BaseRoulante::rotation(const int angle_consigne)
 {
-	kP = 0.62;
-	kI = 0.001;
+	kP = 0.01;
+	kI = 0.00001;
 	kD = 0;
 
 	angleParcouru = Gyro->GetAngle();
 
 	std::cout << "angleParcouru : " << angleParcouru << std::endl;
 
-	erreur = (angle_consigne - angleParcouru) / abs(angle_consigne);
+	erreur = angle_consigne - angleParcouru;
 
 	sommeErreurs += erreur;
 
@@ -164,13 +164,14 @@ double BaseRoulante::rotation(const int angle_consigne)
 
 	erreurPrecedente = erreur;
 
-	return erreur * abs(angle_consigne); // Erreur en degrés
+	return erreur; // Erreur en degrés
 }
 
 void BaseRoulante::resetPID()
 {
 	EncodeurDroit->Reset();
 	EncodeurGauche->Reset();
+
 	Gyro->Reset();
 
 	erreurPrecedente = 0;

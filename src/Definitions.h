@@ -8,6 +8,8 @@
 #ifndef DEFINITIONS_H_
 #define DEFINITIONS_H_
 
+#define DEPART_GAUCHE
+
 #define PWM_BASE_DROITE_1 0
 #define PWM_BASE_DROITE_2 1
 #define PWM_BASE_GAUCHE_1 2

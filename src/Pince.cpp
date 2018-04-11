@@ -18,6 +18,7 @@
 #include <Servo.h>
 #include <DoubleSolenoid.h>
 
+
 namespace rbl {
 
 Pince::Pince()
@@ -37,6 +38,7 @@ Pince::Pince()
 	Encodeur = new Encoder(DIO_ENCODEUR_PIVOT_A, DIO_ENCODEUR_PIVOT_B,false, Encoder::EncodingType::k4X);
 
 	Verin = new DoubleSolenoid(PCM_VERIN_PINCE_A, PCM_VERIN_PINCE_B);
+
 }
 
 void Pince::pinceInit()
@@ -56,15 +58,17 @@ void Pince::attraperCube(bool boutonPresse)
 
 	 if (incrementationAspiration == 40)
 	{
-std::cout<<"gilou Ier"<<std::endl;
 		Verin->Set(frc::DoubleSolenoid::Value::kForward);
 
 	}
 	if(incrementationAspiration == dureeAspiration)
 	{
 		Roues->Set(0);
+		verrinActif = true;
+
 	}
 	incrementationAspiration += 1;
+
 }
 
 void Pince::ejecterCube(bool boutonPresse)
@@ -74,34 +78,47 @@ void Pince::ejecterCube(bool boutonPresse)
 		incrementationEjection = 0;
 		Roues->Set(-1);
 	}
-	else if(incrementationEjection < dureeEjection)
-	{
-		Roues->Set(-1);
-	}
+
 	else if (incrementationEjection == dureeEjection)
 	{
 		Roues->Set(0);
-		incrementinter=0;
-		//Verin->Set(frc::DoubleSolenoid::Value::kReverse);
-
-	}
-	incrementationEjection += 1;
-}
-
-void Pince::pinceIntermediaire()
-{
-	if(incrementinter ==0)
 		Verin->Set(frc::DoubleSolenoid::Value::kReverse);
-	else if(incrementinter==2)
+	}
+	if(incrementationEjection == (dureeEjection+1))
+	{
 		Verin->Set(frc::DoubleSolenoid::Value::kOff);
-	incrementinter++;
-
+		verrinActif = false;
+	}
+		incrementationEjection += 1;
 }
 
-void Pince::afficherPosition()
+void Pince::positionVerrin(bool boutonPresse)
 {
-	positionBras = Encodeur->Get();
-	std::cout << "Pivot : " << positionBras << std::endl;
+	if(boutonPresse == true && boutonPrecedent == false)
+	{
+		if(verrinActif == true)
+		{
+			Verin->Set(frc::DoubleSolenoid::Value::kReverse);
+			verrinActif = false;
+
+		}
+		else if(verrinActif == false)
+		{
+			Verin->Set(frc::DoubleSolenoid::Value::kForward);
+			verrinActif = true;
+		}
+
+	boutonPrecedent = true;
+	}
+	else if (boutonPresse == false)
+	{
+		boutonPrecedent = false;
+	}
+}
+
+int Pince::getPosition()
+{
+	return Encodeur->Get();
 }
 
 void Pince::deplacer()
@@ -110,8 +127,6 @@ void Pince::deplacer()
 	kI = 0.00000001;
 	kD = 0.000001;
 	positionBras = Encodeur->Get();
-
-	std::cout << "Bras : " << positionBras << std::endl;
 
 	erreur = consigne - positionBras;
 	sommeErreurs += erreur;
@@ -128,7 +143,13 @@ void Pince::goToMilieu()
 {
 	consigne = 0;
 }
-
+void Pince::test(bool boutonPresse)
+{
+	if(boutonPresse == true)
+	{
+		Roues->Set(0.5);
+	}
+}
 void Pince::goToEchangeur(bool avant)
 {
 	consigne = 650;

@@ -22,26 +22,27 @@ public:
 
 	void attraperCube(bool boutonPresse);
 	void ejecterCube(bool boutonPresse);
-	void pinceIntermediaire();
 	void pinceInit();
+	void positionVerrin(bool boutonPresse);
 
-	void afficherPosition();
+	int getPosition();
+
 	void ajuster(int pov);
 	void goToMilieu();
 	void goToEchangeur(bool avant);
 	void goToSwitch(bool avant);
 	void goToScale(bool avant);
 	void deplacer();
-
 	virtual ~Pince();
-
+void test(bool boutonPresse);
 private:
 	PWMVictorSPX* Roues;
 	PWMVictorSPX* Pivot;
 	Encoder* Encodeur;
 	DoubleSolenoid* Verin;
 	int incrementinter=0;
-
+	bool verrinActif;
+	bool boutonPrecedent;
 	const int dureeAspiration = 70;
 	const int dureeEjection = 25;
 
