@@ -24,7 +24,7 @@ Autonome::Autonome()
 
 }
 
-void Autonome::autonomeInit(char coteSwitch)
+void Autonome::autonomeInit(char coteSwitch, Pince* pince)
 {
 	if (coteSwitch == 'L')
 	{
@@ -46,38 +46,37 @@ void Autonome::autonomeInit(char coteSwitch)
 void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 {
 	erreur = 1000;
-
 	switch(etat)
 	{
 	//Avancer
 	case 1:
-		erreur = base->parcourir_distance(100);
+		erreur = base->parcourir_distance(30);
 		break;
 
 	//Tourner
 	case 2:
-		erreur = base->rotation(rotation1);
+		erreur = base->rotation(-30);
 		break;
 
 	//Avancer
 	case 3:
-		erreur = base->parcourir_distance(100);
+		erreur = base->parcourir_distance(220);
 		break;
 
 	//Tourner
 	case 4:
-		erreur = base->rotation(rotation2);
+		erreur = base->rotation(30);
 		break;
 
 	//Avancer
 	case 5:
-		erreur = base->parcourir_distance(100);
+		pince->goToSwitch(true);
+		std::cout<< "Pivot : " << pince->getPosition() << std::endl;
 		break;
 
 	// TODO Descendre pince
 	case 6:
-		pince->goToSwitch(true);
-		std::cout<< "Pivot : " << pince->getPosition() << std::endl;
+		erreur = base->parcourir_distance(25);
 		break;
 
 	//Ejecter cube
@@ -86,16 +85,104 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 		etat++;
 		break;
 
-	//Fin
+	case 8:
+		erreur = base->parcourir_distance(-30);
+		break;
+
+	case 9:
+		erreur = base->rotation(50);
+		break;
+
+	case 10:
+		pince->goToEchangeur(true);
+		break;
+
+	case 11:
+		erreur = base->parcourir_distance(90);
+		break;
+
+	case 12:
+		std::cout<<"attrapage"<<std::endl;
+		break;
+
+	case 13:
+		etat++;
+		break;
+	case 14:
+		erreur = base->parcourir_distance(-60);
+		break;
+
+	case 15:
+		pince->goToSwitch(true);
+		break;
+
+	case 16:
+		erreur = base->rotation(-50);
+		break;
+	case 17:
+		erreur = base->parcourir_distance(80);
+		break;
+
+	case 18:
+		pince->ejecterCube(true);
+		etat++;
+		break;
+
+	case 19:
+			erreur = base->parcourir_distance(-20);
+			break;
+
+		case 20:
+			erreur = base->rotation(50);
+			break;
+
+		case 21:
+			pince->goToEchangeur(true);
+			break;
+
+		case 22:
+			erreur = base->parcourir_distance(100);
+			break;
+
+		case 23:
+			std::cout<<"attrapage"<<std::endl;
+			break;
+
+		case 24:
+			etat++;
+			break;
+		case 25:
+			erreur = base->parcourir_distance(-80);
+			break;
+
+		case 26:
+			pince->goToSwitch(true);
+			break;
+
+		case 27:
+			erreur = base->rotation(-50);
+			break;
+		case 28:
+			erreur = base->parcourir_distance(80);
+			break;
+
+		case 29:
+			pince->ejecterCube(true);
+			etat++;
+			break;
+
 	default:
-		pince->ejecterCube(false); //On re-appelle ejecter cube en simulant un bouton relaché pour que la pince s'arrete
+		 //On re-appelle ejecter cube en simulant un bouton relaché pour que la pince s'arrete
 		break;
 	}
+
+	pince->ejecterCube(false);
+	pince->attraperCubeAuto(false);
 
 	pince->deplacer();
 
 	//Si un PID est consideré comme fini alors on passe à l'etat suivant et on reset capteurs et variables
-	if(etat == 1 || etat == 3 || etat == 5)
+	if(etat == 1 || etat == 3 || etat == 6 || etat == 8 || etat == 11 || etat == 13 || etat == 14 || etat == 17 || etat == 19 || etat == 22 || etat == 24 || etat == 25 || etat == 28)
 	{
 		if(erreur < toleranceAvancer && erreur > -toleranceAvancer)
 		{
@@ -104,7 +191,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 			base->resetPID();
 		}
 	}
-	else if(etat == 2 || etat == 4)
+	else if(etat == 2 || etat == 4 || etat == 9 || etat == 16 || etat == 20 || etat == 27)
 	{
 		if(erreur < toleranceRotation && erreur > -toleranceRotation)
 		{
@@ -113,9 +200,27 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 			base->resetPID();
 		}
 	}
-	else if(etat==6)
+	else if(etat==5 || etat==15 || etat == 26)
 	{
 		if(pince->getPosition() > 300)
+		{
+			etat++;
+		}
+	}
+
+	else if (etat==21|| etat == 10)
+	{
+		if(pince->getPosition() > 600)
+			etat++;
+	}
+
+	else if (etat==12|| etat == 23)
+	{
+		if(pince->getIncrementAspiration()>40)
+		{
+			pince->attraperCubeAuto(true);
+		}
+		else if(pince->getIncrementAspiration()==40)
 		{
 			etat++;
 		}

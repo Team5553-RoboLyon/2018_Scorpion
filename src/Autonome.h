@@ -19,7 +19,7 @@ class Autonome
 public:
 	Autonome();
 
-	void autonomeInit(char coteSwitch);
+	void autonomeInit(char coteSwitch,  Pince* pince);
 
 	void departMilieu(BaseRoulante* base, Pince* pince);
 	void departDroite(BaseRoulante* base, Pince* pince);

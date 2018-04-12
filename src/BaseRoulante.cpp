@@ -115,9 +115,9 @@ void BaseRoulante::changerVitesse(bool etatGachette)
 
 double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 {
-	kP = 0.018; //0.009
-	kI = 0;
-	kD = 0;
+	kP = 0.0055; //0.009
+	kI = 0.000002;
+	kD = 0.005;//0.01;
 	distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
 
 	std::cout << "Droite : " << distanceParcourueDroite << std::endl;
@@ -140,8 +140,8 @@ double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 
 double BaseRoulante::rotation(const int angle_consigne)
 {
-	kP = 0.01;
-	kI = 0.00001;
+	kP = 0.025;
+	kI = 0.00005;
 	kD = 0;
 
 	angleParcouru = Gyro->GetAngle();

@@ -51,19 +51,19 @@ class Robot: public frc::IterativeRobot
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
-		position = 'g';
+		position = 'm';
 	}
 
 	void AutonomousInit() override
 	{
-		pince.pinceInit();
 		std::string gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-		autonome.autonomeInit(gameData[0]);
+		autonome.autonomeInit(gameData[0],&pince);
 	}
 
 	void AutonomousPeriodic()
 	{
-		if (position == 'm')
+		base.parcourir_distance(333); //212, 333, 470
+		/*if (position == 'm')
 		{
 			autonome.departMilieu(&base, &pince);
 		}
@@ -74,8 +74,7 @@ class Robot: public frc::IterativeRobot
 		else if(position == 'd')
 		{
 			autonome.departDroite(&base, &pince);
-		}
-
+		}*/
 	}
 
 	void TeleopInit()

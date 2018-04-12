@@ -23,8 +23,8 @@ namespace rbl {
 
 Pince::Pince()
 {
-    incrementationAspiration = dureeAspiration;
-    incrementationEjection = dureeEjection;
+    incrementationAspiration = dureeAspiration+10;
+    incrementationEjection = dureeEjection+10;
 
 	consigne = 0;
 	sommeErreurs = 0;
@@ -39,6 +39,16 @@ Pince::Pince()
 
 	Verin = new DoubleSolenoid(PCM_VERIN_PINCE_A, PCM_VERIN_PINCE_B);
 
+}
+
+int Pince::getIncrementAspiration()
+{
+	return incrementationAspiration;
+}
+
+int Pince::getIncrementEjection()
+{
+	return incrementationEjection;
 }
 
 void Pince::pinceInit()
@@ -71,6 +81,29 @@ void Pince::attraperCube(bool boutonPresse)
 
 }
 
+void Pince::attraperCubeAuto(bool boutonPresse)
+{
+	if(boutonPresse == true)
+	{
+		incrementationAspiration = 0;
+		Roues->Set(0.5);
+	}
+
+
+	 if (incrementationAspiration == 10)
+	{
+		Verin->Set(frc::DoubleSolenoid::Value::kForward);
+
+	}
+	if(incrementationAspiration == dureeAspirationAuto)
+	{
+		Roues->Set(0);
+		verrinActif = true;
+
+	}
+	incrementationAspiration += 1;
+}
+
 void Pince::ejecterCube(bool boutonPresse)
 {
 	if(boutonPresse == true)
@@ -84,7 +117,7 @@ void Pince::ejecterCube(bool boutonPresse)
 		Roues->Set(0);
 		Verin->Set(frc::DoubleSolenoid::Value::kReverse);
 	}
-	if(incrementationEjection == (dureeEjection+1))
+	else if(incrementationEjection == (dureeEjection+1))
 	{
 		Verin->Set(frc::DoubleSolenoid::Value::kOff);
 		verrinActif = false;
@@ -186,6 +219,15 @@ void Pince::ajuster(int pov)
 	else if(pov == 180)
 	{
 		consigne -= 5;
+	}
+
+	if(consigne > 700)
+	{
+		consigne = 700;
+	}
+	else if(consigne < -700)
+	{
+		consigne = -700;
 	}
 	std::cout<< consigne <<std::endl;
 }

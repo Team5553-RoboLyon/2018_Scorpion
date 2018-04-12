@@ -53,7 +53,7 @@ private:
 
 	Timer* timer;
 
-	const double r = 8;
+	const double r = 7.62;
 
 	double vitesseDroite, vitesseGauche, y, z;
 	double distanceParcourueDroite, erreurDroite, erreurPrecedenteDroite, sommeErreursDroite, differenceErreursDroite;
