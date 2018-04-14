@@ -26,12 +26,14 @@ BaseRoulante::BaseRoulante()
 
 	Gyro = new ADXRS450_Gyro();
 
+	Gyro->Calibrate();
+	Gyro->Reset();
 
 	EncodeurDroit = new Encoder(DIO_ENCODEUR_DROIT_A, DIO_ENCODEUR_DROIT_B,false, Encoder::EncodingType::k4X);
-
-
 	EncodeurGauche = new Encoder(DIO_ENCODEUR_GAUCHE_A, DIO_ENCODEUR_GAUCHE_B, false, Encoder::EncodingType::k4X);
 
+	EncodeurDroit->Reset();
+	EncodeurGauche->Reset();
 
 	DoubleSolenoid1 = new DoubleSolenoid(PCM_BALLSHIFTER_A, PCM_BALLSHIFTER_B);
 
@@ -44,13 +46,7 @@ void BaseRoulante::baseInit()
 	BaseGauche1->Set(0);
 	BaseGauche2->Set(0);
 
-	Gyro->Calibrate();
-	Gyro->Reset();
-
-	EncodeurDroit->Reset();
-	EncodeurGauche->Reset();
-
-	DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
+	DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kReverse);
 
 	vitesseBallShifter = false;
 	std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
@@ -94,13 +90,13 @@ void BaseRoulante::changerVitesse(bool etatGachette)
 	{
 		if (vitesseBallShifter)
 		{
-			DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
+			DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kReverse);
 			std::cout << "*************** VITESSE 1 ACTIVEE ***************" << std::endl;
 			vitesseBallShifter = false;
 		}
 		else
 		{
-			DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kReverse);
+			DoubleSolenoid1->Set(frc::DoubleSolenoid::Value::kForward);
 			std::cout << "*************** VITESSE 2 ACTIVEE ***************" << std::endl;
 			vitesseBallShifter = true;
 		}
@@ -115,9 +111,9 @@ void BaseRoulante::changerVitesse(bool etatGachette)
 
 double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 {
-	kP = 0.0055; //0.009
-	kI = 0.000002;
-	kD = 0.005;//0.01;
+	kP = 0.01;
+	kI = 0.0000003;
+	kD = 0.0000035;
 	distanceParcourueDroite = EncodeurDroit->Get() * r * 2 * M_PI / 360;
 
 	std::cout << "Droite : " << distanceParcourueDroite << std::endl;
@@ -140,9 +136,9 @@ double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 
 double BaseRoulante::rotation(const int angle_consigne)
 {
-	kP = 0.025;
-	kI = 0.00005;
-	kD = 0;
+	kP = 0.065;
+	kI = 0.000093;
+	kD = 0.3;
 
 	angleParcouru = Gyro->GetAngle();
 

@@ -47,8 +47,8 @@ private:
 	int incrementinter=0;
 	bool verrinActif;
 	bool boutonPrecedent;
-	const int dureeAspiration = 70;
-	const int dureeAspirationAuto = 40;
+	const int dureeAspiration = 25;
+	const int dureeAspirationAuto = 35;
 	const int dureeEjection = 25;
 
     int incrementationAspiration, incrementationEjection;

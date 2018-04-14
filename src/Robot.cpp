@@ -51,7 +51,7 @@ class Robot: public frc::IterativeRobot
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
-		position = 'm';
+		position = 'g';
 	}
 
 	void AutonomousInit() override
@@ -62,8 +62,8 @@ class Robot: public frc::IterativeRobot
 
 	void AutonomousPeriodic()
 	{
-		base.parcourir_distance(333); //212, 333, 470
-		/*if (position == 'm')
+
+		if (position == 'm')
 		{
 			autonome.departMilieu(&base, &pince);
 		}
@@ -74,12 +74,12 @@ class Robot: public frc::IterativeRobot
 		else if(position == 'd')
 		{
 			autonome.departDroite(&base, &pince);
-		}*/
+		}
 	}
 
 	void TeleopInit()
 	{
-
+		base.baseInit();
 	}
 
 	void TeleopPeriodic()
@@ -95,8 +95,6 @@ class Robot: public frc::IterativeRobot
 		pince.ejecterCube(Joystick1->GetRawButton(3));
 		pince.positionVerrin(Joystick1->GetRawButton(4));
 		pince.ajuster(Joystick1->GetPOV());
-
-		std::cout<< "Pivot : " << pince.getPosition() << std::endl;;
 
 		if(Joystick1->GetRawButton(11))
 		{

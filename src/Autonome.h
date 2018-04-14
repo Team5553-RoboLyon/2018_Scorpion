@@ -32,12 +32,14 @@ public:
 
 private:
 	unsigned int etat, incrementation;
-	const double toleranceAvancer = 5;
-	const double toleranceRotation = 5;
+	const double toleranceAvancer = 2;
+	const double toleranceRotation = 2;
 	double erreur;
 
 	bool switchDroit;
-	int rotation1, rotation2, rotationMemeCote1, rotationCoteOppose1, rotationCoteOppose2;
+	int rotation1, rotation2;
+	int rotationMemeCote1, rotationCoteOppose1, rotationCoteOppose2;
+	int rotationMilieu1, rotationMilieu2, rotationMilieu3, rotationMilieu4, rotationMilieu5, rotationMilieu6;
 
 };
 

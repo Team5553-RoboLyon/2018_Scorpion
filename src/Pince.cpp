@@ -64,18 +64,15 @@ void Pince::attraperCube(bool boutonPresse)
 		incrementationAspiration = 0;
 		Roues->Set(0.5);
 	}
-
-
-	 if (incrementationAspiration == 40)
+	else if (incrementationAspiration == 15)
 	{
 		Verin->Set(frc::DoubleSolenoid::Value::kForward);
 
 	}
-	if(incrementationAspiration == dureeAspiration)
+	else if(incrementationAspiration == dureeAspiration)
 	{
 		Roues->Set(0);
 		verrinActif = true;
-
 	}
 	incrementationAspiration += 1;
 
@@ -90,7 +87,7 @@ void Pince::attraperCubeAuto(bool boutonPresse)
 	}
 
 
-	 if (incrementationAspiration == 10)
+	 if (incrementationAspiration == 17)
 	{
 		Verin->Set(frc::DoubleSolenoid::Value::kForward);
 
@@ -119,7 +116,7 @@ void Pince::ejecterCube(bool boutonPresse)
 	}
 	else if(incrementationEjection == (dureeEjection+1))
 	{
-		Verin->Set(frc::DoubleSolenoid::Value::kOff);
+		//Verin->Set(frc::DoubleSolenoid::Value::kOff);
 		verrinActif = false;
 	}
 		incrementationEjection += 1;
@@ -214,11 +211,11 @@ void Pince::ajuster(int pov)
 {
 	if(pov == 0)
 	{
-		consigne += 5;
+		consigne += 12;
 	}
 	else if(pov == 180)
 	{
-		consigne -= 5;
+		consigne -= 12;
 	}
 
 	if(consigne > 700)
@@ -229,7 +226,6 @@ void Pince::ajuster(int pov)
 	{
 		consigne = -700;
 	}
-	std::cout<< consigne <<std::endl;
 }
 
 Pince::~Pince()
