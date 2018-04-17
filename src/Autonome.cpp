@@ -300,8 +300,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 		break;
 	//Avancer jusqu'au switch
 	case 5:
-		pince->ejecterCube(true); //On simule un bouton appuyé et on passe au suivant
-		etat++;
+		std::cout <<"ejection"<<std::endl;
 		break;
 
 	case 6:
@@ -325,7 +324,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 11:
-		erreur=base->parcourir_distance(-55);
+		erreur=base->parcourir_distance(-60);
 		break;
 
 	case 12:
@@ -345,8 +344,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 16:
-		pince->ejecterCube(true);
-		etat++;
+		std::cout <<"ejection"<<std::endl;
 		break;
 
 	//Fin
@@ -384,23 +382,31 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 			etat++;
 		}
 	}
-
 	else if(etat==10 )
+	{
+		if(pince->getPosition() <-600)
 		{
-			if(pince->getPosition() <-600)
-			{
-				etat++;
-			}
+			etat++;
 		}
-
+	}
 	else if(etat==14 )
-			{
-				if(pince->getPosition() >-300)
-				{
-					etat++;
-				}
-			}
-
+	{
+		if(pince->getPosition() >-300)
+		{
+			etat++;
+		}
+	}
+	else if (etat==5 || etat==16)
+	{
+		if(pince->getIncrementEjection()>26)
+		{
+			pince->ejecterCube(true);
+		}
+		else if (pince->getIncrementEjection()==26)
+		{
+			etat++;
+		}
+	}
 	else if (etat==12)
 		{
 			if(pince->getIncrementAspiration()>40)

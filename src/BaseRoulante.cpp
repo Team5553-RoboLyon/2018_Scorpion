@@ -124,10 +124,13 @@ double BaseRoulante::parcourir_distance(int distance_a_parcourir)
 
 	vitesseDroite = kP * erreurDroite + kI * sommeErreursDroite + kD * differenceErreursDroite;
 
-	BaseGauche1->Set(-vitesseDroite);//-vitesseGauche);
-	BaseGauche2->Set(-vitesseDroite);//-vitesseGauche);
-	BaseDroite1->Set(vitesseDroite);
-	BaseDroite2->Set(vitesseDroite);
+	int angle = Gyro->GetAngle() /10;
+
+	BaseGauche1->Set(-vitesseDroite);// + angle);//-vitesseGauche);
+	BaseGauche2->Set(-vitesseDroite);// + angle);//-vitesseGauche);
+	BaseDroite1->Set(vitesseDroite);// - angle);
+	BaseDroite2->Set(vitesseDroite);// - angle);
+
 
 	erreurPrecedenteDroite = erreurDroite;
 

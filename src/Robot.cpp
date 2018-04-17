@@ -40,10 +40,13 @@
 
 class Robot: public frc::IterativeRobot
 {
-
-
 	void RobotInit()
 	{
+		chooser.AddDefault("m", "m");
+		chooser.AddObject("g", "g");
+		chooser.AddObject("d", "d");
+		frc::SmartDashboard::PutData("Auto Modes", &chooser);
+
 		Joystick1 = new Joystick(0);
 		ai = new AnalogInput(0);
 		pince.pinceInit();
@@ -56,13 +59,15 @@ class Robot: public frc::IterativeRobot
 
 	void AutonomousInit() override
 	{
+		position = chooser.GetSelected()[0];
+		std::cout << "Auto selected: " << position << std::endl;
+
 		std::string gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-		autonome.autonomeInit(gameData[0],&pince);
+		autonome.autonomeInit(gameData[0], &pince);
 	}
 
 	void AutonomousPeriodic()
 	{
-
 		if (position == 'm')
 		{
 			autonome.departMilieu(&base, &pince);
@@ -94,6 +99,7 @@ class Robot: public frc::IterativeRobot
 		pince.attraperCube(Joystick1->GetRawButton(2));
 		pince.ejecterCube(Joystick1->GetRawButton(3));
 		pince.positionVerrin(Joystick1->GetRawButton(4));
+
 		pince.ajuster(Joystick1->GetPOV());
 
 		if(Joystick1->GetRawButton(11))
@@ -131,9 +137,12 @@ class Robot: public frc::IterativeRobot
 	}
 
 private:
+	frc::LiveWindow& m_lw = *LiveWindow::GetInstance();
+	frc::SendableChooser<std::string> chooser;
+	char position;
+
 	Joystick* Joystick1;
 	AnalogInput* ai;
-	char position;
 
 	rbl::BaseRoulante base;
 	rbl::Pince pince;
