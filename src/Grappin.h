@@ -20,9 +20,10 @@ class Grappin
 public:
 	Grappin();
 
-	void deployerEtage1();
-	void deployerEtage2();
-	void treuilMonter(bool boutonPresse);
+	void initBras();
+	void deployerBras(bool boutonPresse);
+	void deployerMousqueton(bool boutonPresse2);
+	void treuilMonter(double power);
 	virtual ~Grappin();
 
 private:
@@ -30,8 +31,11 @@ private:
 	DoubleSolenoid* VerinBas;
 	DoubleSolenoid* VerinHaut;
 	Joystick* Joystick1;
+	bool boutonPrecedent;
+	bool verrinActif;
 
-	bool boutonPresse;
+	bool boutonPrecedent2;
+	bool verrinActif2;
 };
 }
 

@@ -42,19 +42,22 @@ class Robot: public frc::IterativeRobot
 {
 	void RobotInit()
 	{
-		chooser.AddDefault("m", "m");
-		chooser.AddObject("g", "g");
-		chooser.AddObject("d", "d");
+		chooser.AddDefault("Depart milieu", "m");
+		chooser.AddObject("Depart gauche", "g");
+		chooser.AddObject("Depart droite", "d");
 		frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 		Joystick1 = new Joystick(0);
 		ai = new AnalogInput(0);
 		pince.pinceInit();
 		base.baseInit();
+		//grappin.initBras();
 
 		CameraServer::GetInstance()->StartAutomaticCapture(0);
 		CameraServer::GetInstance()->SetSize(0);
-		position = 'g';
+
+		CameraServer::GetInstance()->StartAutomaticCapture(1);
+		CameraServer::GetInstance()->SetSize(0);
 	}
 
 	void AutonomousInit() override
@@ -68,6 +71,9 @@ class Robot: public frc::IterativeRobot
 
 	void AutonomousPeriodic()
 	{
+		//base.parcourir_distance(100);
+		//base.rotation(30);
+
 		if (position == 'm')
 		{
 			autonome.departMilieu(&base, &pince);
@@ -93,14 +99,15 @@ class Robot: public frc::IterativeRobot
 
 		base.deplacer(Joystick1);
 		base.changerVitesse(Joystick1->GetRawButton(1));
-		//base.afficherCodeuses();
-		//base.afficherGyro();
+		base.afficherCodeuses();
+		base.afficherGyro();
 
 		pince.attraperCube(Joystick1->GetRawButton(2));
 		pince.ejecterCube(Joystick1->GetRawButton(3));
 		pince.positionVerrin(Joystick1->GetRawButton(4));
-
+		pince.ejectionSwitch(Joystick1->GetRawButton(5));
 		pince.ajuster(Joystick1->GetPOV());
+		pince.deplacer();
 
 		if(Joystick1->GetRawButton(11))
 		{
@@ -109,10 +116,6 @@ class Robot: public frc::IterativeRobot
 		else if(Joystick1->GetRawButton(9))
 		{
 			pince.goToSwitch(true);
-		}
-		else if(Joystick1->GetRawButton(7))
-		{
-			pince.goToScale(true);
 		}
 		else if(Joystick1->GetRawButton(12))
 		{
@@ -126,9 +129,6 @@ class Robot: public frc::IterativeRobot
 		{
 			pince.goToMilieu();
 		}
-		pince.deplacer();
-
-		//grappin.treuilMonter(Joystick1->GetRawButton(6));
 	}
 
 	void TestPeriodic()
@@ -146,7 +146,6 @@ private:
 
 	rbl::BaseRoulante base;
 	rbl::Pince pince;
-	rbl::Grappin grappin;
 	rbl::Autonome autonome;
 };
 

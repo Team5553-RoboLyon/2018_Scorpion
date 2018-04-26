@@ -24,30 +24,75 @@ Grappin::Grappin()
 	VerinHaut = new DoubleSolenoid(PCM_VERIN_GRAPIN_HAUT_A, PCM_VERIN_GRAPIN_HAUT_B);
 
 	Joystick1 = new Joystick(0);
-	boutonPresse = false;
 
 }
 
-void Grappin::deployerEtage1()
+void Grappin::initBras()
 {
+
+
+	VerinBas->Set(frc::DoubleSolenoid::Value::kForward);
+	VerinHaut->Set(frc::DoubleSolenoid::Value::kForward);
+	verrinActif = false;
+	verrinActif2 = false;
+
 
 }
 
-void Grappin::deployerEtage2()
-{
 
-}
 
-void Grappin::treuilMonter(bool boutonPresse)
+void Grappin::deployerBras(bool boutonPresse)
 {
-	if (boutonPresse == true)
+	if(boutonPresse == true && boutonPrecedent == false)
 	{
-		Treuil -> Set(0.5);
+		if(verrinActif == true)
+		{
+			VerinBas->Set(frc::DoubleSolenoid::Value::kReverse);
+			verrinActif = false;
+
+		}
+		else if(verrinActif == false)
+		{
+			VerinBas->Set(frc::DoubleSolenoid::Value::kForward);
+			verrinActif = true;
+		}
+
+	boutonPrecedent = true;
 	}
-	else
+	else if (boutonPresse == false)
 	{
-		Treuil -> Set(0);
+		boutonPrecedent = false;
 	}
+
+}
+
+void Grappin::deployerMousqueton(bool boutonPresse2)
+{
+	if(boutonPresse2 == true && boutonPrecedent2 == false)
+	{
+		if(verrinActif2 == true)
+		{
+			VerinHaut->Set(frc::DoubleSolenoid::Value::kReverse);
+			verrinActif2 = false;
+
+		}
+		else if(verrinActif2 == false)
+		{
+			VerinHaut->Set(frc::DoubleSolenoid::Value::kForward);
+			verrinActif2 = true;
+		}
+
+	boutonPrecedent2 = true;
+	}
+	else if (boutonPresse2 == false)
+	{
+		boutonPrecedent2 = false;
+	}
+}
+
+void Grappin::treuilMonter(double power)
+{
+	Treuil->Set(power-1);
 }
 
 Grappin::~Grappin()

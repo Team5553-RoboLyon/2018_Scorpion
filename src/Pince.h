@@ -36,6 +36,7 @@ public:
 	void goToSwitch(bool avant);
 	void goToScale(bool avant);
 	void deplacer();
+	void ejectionSwitch(bool boutonPresse);
 	virtual ~Pince();
 	void test(bool boutonPresse);
 

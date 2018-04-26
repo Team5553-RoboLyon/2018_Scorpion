@@ -121,6 +121,26 @@ void Pince::ejecterCube(bool boutonPresse)
 	}
 		incrementationEjection += 1;
 }
+void Pince::ejectionSwitch(bool boutonPresse)
+{
+	if(boutonPresse == true)
+		{
+			incrementationEjection = 0;
+			Roues->Set(-0.65);
+		}
+
+		else if (incrementationEjection == dureeEjection)
+		{
+			Roues->Set(0);
+			Verin->Set(frc::DoubleSolenoid::Value::kReverse);
+		}
+		else if(incrementationEjection == (dureeEjection+1))
+		{
+			//Verin->Set(frc::DoubleSolenoid::Value::kOff);
+			verrinActif = false;
+		}
+			incrementationEjection += 1;
+}
 
 void Pince::positionVerrin(bool boutonPresse)
 {

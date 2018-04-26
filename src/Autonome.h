@@ -38,8 +38,8 @@ private:
 
 	bool switchDroit;
 	int rotation1, rotation2;
-	int rotationMemeCote1, rotationCoteOppose1, rotationCoteOppose2;
-	int rotationMilieu1, rotationMilieu2, rotationMilieu3, rotationMilieu4, rotationMilieu5, rotationMilieu6;
+	int rotationMemeCote1, rotationMemeCote2, rotationMemeCote3, rotationCoteOppose1, rotationCoteOppose2;
+	int rotationMilieu1et8, rotationMilieu2et7, rotationMilieu3et5, rotationMilieu4et6;
 
 };
 
