@@ -31,16 +31,16 @@ void Autonome::autonomeInit(char coteSwitch, Pince* pince)
 		switchDroit = false;
 		rotationMilieu1et8 = -35;
 		rotationMilieu2et7 = 35;
-		rotationMilieu3et5 = 90;
-		rotationMilieu4et6 = -90;
+		rotationMilieu3et5 = 74;
+		rotationMilieu4et6 = -83;
 	}
 	else
 	{
 		switchDroit = true;
 		rotationMilieu1et8 = 35;
 		rotationMilieu2et7 = -35;
-		rotationMilieu3et5 = -90;
-		rotationMilieu4et6 = 90;
+		rotationMilieu3et5 = -74;
+		rotationMilieu4et6 = 83;
 	}
 
 	etat = 1;
@@ -80,7 +80,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 
 	//Descendre pince
 	case 6:
-		erreur = base->parcourir_distance(65);
+		erreur = base->parcourir_distance(20);
 		break;
 
 	//Ejecter cube
@@ -89,7 +89,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 8:
-		erreur = base->parcourir_distance(-150);
+		erreur = base->parcourir_distance(-80);
 		break;
 
 	case 9:
@@ -97,7 +97,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 10:
-		erreur = base->parcourir_distance(120);
+		erreur = base->parcourir_distance(110);
 		break;
 
 	case 11:
@@ -132,7 +132,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 18:
-		erreur = base->parcourir_distance(-120);
+		erreur = base->parcourir_distance(-100);
 		break;
 
 	case 19:
@@ -140,14 +140,14 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 20:
-		erreur = base->parcourir_distance(150);
+		erreur = base->parcourir_distance(80);
 		break;
 
 	case 21:
 		std::cout<<"ejection"<<std::endl;
 		break;
 
-	case 22:
+	/*case 22:
 		erreur = base->parcourir_distance(-150);
 		break;
 
@@ -196,7 +196,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 
 	case 33:
 		std::cout<<"ejection"<<std::endl;
-		break;
+		break;*/
 
 	default:
 		 //On re-appelle ejecter cube en simulant un bouton relaché pour que la pince s'arrete
@@ -247,7 +247,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 	{
 		if(pince->getIncrementEjection()>26)
 		{
-			pince->ejecterCube(true);
+			pince->ejectionSwitch(true);
 		}
 		else if (pince->getIncrementEjection()==26)
 		{
@@ -298,7 +298,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 	{
 	//Avancer
 	case 1:
-		erreur = base->parcourir_distance(380);
+		erreur = base->parcourir_distance(340);
 		break;
 
 	//Tourner
@@ -314,15 +314,16 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 
 	//Ejecter cube
 	case 4:
-		erreur = base->parcourir_distance(10);
+		erreur = base->parcourir_distance(25);
 		break;
 
 	//Avancer jusqu'au switch
 	case 5:
+		//Qu'est ce que tu imagine qui ce passe  à cette etape?
 		std::cout <<"ejection"<<std::endl;
 		break;
 
-	case 6:
+	/*case 6:
 		erreur = base->parcourir_distance(-10);
 		break;
 
@@ -343,7 +344,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 		break;
 
 	case 11:
-		erreur=base->parcourir_distance(-50);
+		erreur=base->parcourir_distance(-70);
 		break;
 
 	case 12:
@@ -369,7 +370,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 
 	case 17:
 		std::cout <<"ejection"<<std::endl;
-		break;
+		break;*/
 
 	//Fin
 	default:
@@ -424,7 +425,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 	{
 		if(pince->getIncrementEjection()>26)
 		{
-			pince->ejecterCube(true);
+			pince->ejectionSwitch(true);
 		}
 		else if (pince->getIncrementEjection()==26)
 		{
@@ -435,11 +436,12 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 
 void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 {
-	switch(etat)
+	erreur = base->parcourir_distance(350);
+	/*switch(etat)
 	{
 	//Avancer
 	case 1:
-		erreur = base->parcourir_distance(550);
+		//erreur = base->parcourir_distance(500);
 		break;
 
 	//Tourner
@@ -449,7 +451,7 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 
 	//Avancer
 	case 3:
-		erreur = base->parcourir_distance(480);
+		erreur = base->parcourir_distance(420);
 		break;
 
 	//Tourner
@@ -465,6 +467,7 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 
 	//Ejecter cube
 	case 6:
+
 		pince->positionVerrin(true); //On simule un bouton appuyé et on passe au suivant
 		etat++;
 		break;
@@ -519,7 +522,7 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 	default :
 		std::cout<< "####### FIN #######" << std::endl;
 		break;
-	}
+	}*/
 
 	pince->positionVerrin(false);
 	pince->attraperCube(false);
@@ -527,7 +530,7 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 	pince->deplacer();
 
 	//Si un PID est consideré comme fini alors on passe à l'etat suivant et on reset capteurs et variables
-	if(etat == 1 || etat == 3 || etat == 9 || etat == 14 || etat == 16)
+	/*if(etat == 1 || etat == 3 || etat == 9 || etat == 14 || etat == 16)
 	{
 		if(erreur < toleranceAvancer && erreur > -toleranceAvancer)
 		{
@@ -569,7 +572,7 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 		{
 			etat++;
 		}
-	}
+	}*/
 }
 
 Autonome::~Autonome()

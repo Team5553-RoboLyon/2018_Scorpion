@@ -38,7 +38,7 @@ public:
 
 	virtual ~BaseRoulante();
 
-private:
+//private:
 	VictorSP* BaseDroite1;
 	VictorSP* BaseDroite2;
 	VictorSP* BaseGauche1;
@@ -53,13 +53,13 @@ private:
 
 	Timer* timer;
 
-	const double r = 7.62;
+	const double r = 7.62, reduction = 13.146;
 
 	double vitesseDroite, vitesseGauche, y, z;
 	double distanceParcourueDroite, erreurDroite, erreurPrecedenteDroite, sommeErreursDroite, differenceErreursDroite;
 	double distanceParcourueGauche, erreurGauche, erreurPrecedenteGauche, sommeErreursGauche, differenceErreursGauche;
 	double erreurMoyenne, angleParcouru, erreur, erreurPrecedente, sommeErreurs, differenceErreurs;
-	double kP, kI, kD;
+	double kPAvancer, kIAvancer, kDAvancer, kPRotation, kIRotation, kDRotation;
 	bool vitesseBallShifter, etatPrecedentGachette;
 };
 

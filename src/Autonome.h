@@ -33,7 +33,7 @@ public:
 private:
 	unsigned int etat, incrementation;
 	const double toleranceAvancer = 2;
-	const double toleranceRotation = 2;
+	const double toleranceRotation = 5;
 	double erreur;
 
 	bool switchDroit;

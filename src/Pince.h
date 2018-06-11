@@ -40,7 +40,7 @@ public:
 	virtual ~Pince();
 	void test(bool boutonPresse);
 
-private:
+//public:
 	PWMVictorSPX* Roues;
 	PWMVictorSPX* Pivot;
 	Encoder* Encodeur;

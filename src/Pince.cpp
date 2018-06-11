@@ -126,7 +126,7 @@ void Pince::ejectionSwitch(bool boutonPresse)
 	if(boutonPresse == true)
 		{
 			incrementationEjection = 0;
-			Roues->Set(-0.65);
+			Roues->Set(-0.5);
 		}
 
 		else if (incrementationEjection == dureeEjection)

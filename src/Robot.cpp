@@ -74,16 +74,20 @@ class Robot: public frc::IterativeRobot
 		//base.parcourir_distance(100);
 		//base.rotation(30);
 
+		//kPRotation = 0.050 pour cotés et 0.075 pour milieu ######## PARDONNEZ MOI SVP ########
 		if (position == 'm')
 		{
+			base.kPRotation = 0.075;
 			autonome.departMilieu(&base, &pince);
 		}
 		else if (position == 'g')
 		{
+			base.kPRotation = 0.05;
 			autonome.departGauche(&base, &pince);
 		}
 		else if(position == 'd')
 		{
+			base.kPRotation = 0.05;
 			autonome.departDroite(&base, &pince);
 		}
 	}
