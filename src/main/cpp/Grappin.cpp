@@ -5,14 +5,14 @@
  *      Author: Nathan
  */
 
+#include <iostream>
+#include <frc/WPILib.h>
+
 #include "Grappin.h"
 #include "Definitions.h"
-#include <VictorSP.h>
-#include "WPILib.h"
-#include <Joystick.h>
 
-namespace rbl
-{
+using namespace frc;
+
 
 Grappin::Grappin()
 {
@@ -101,5 +101,3 @@ Grappin::~Grappin()
 	delete VerinBas;
 	delete Treuil;
 }
-
-} /* namespace rbl */

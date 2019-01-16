@@ -4,15 +4,18 @@
  *  Created on: 10 avr. 2018
  *      Author: Nathan
  */
-#include <iostream>
-#include "BaseRoulante.h"
-#include "Pince.h"
 
 #ifndef AUTONOME_H_
 #define AUTONOME_H_
 
-namespace rbl
-{
+#include <iostream>
+#include <frc/WPILib.h>
+
+#include "BaseRoulante.h"
+#include "Pince.h"
+
+using namespace frc;
+
 
 class Autonome
 {
@@ -43,6 +46,5 @@ private:
 
 };
 
-} /* namespace rbl */
 
 #endif /* AUTONOME_H_ */

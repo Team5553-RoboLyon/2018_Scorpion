@@ -8,12 +8,11 @@
 #ifndef GRAPPIN_H_
 #define GRAPPIN_H_
 
-#include <VictorSP.h>
-#include "WPILib.h"
-#include <DigitalInput.h>
+#include <frc/WPILib.h>
+#include <iostream>
 
-namespace rbl
-{
+using namespace frc;
+
 
 class Grappin
 {
@@ -37,6 +36,6 @@ private:
 	bool boutonPrecedent2;
 	bool verrinActif2;
 };
-}
+
 
 #endif /* GRAPPIN_H_ */

@@ -4,14 +4,16 @@
  *  Created on: 10 avr. 2018
  *      Author: Julien Bertrant "All rights reserved"
  */
+
 #include <iostream>
+#include <frc/WPILib.h>
+
 #include "BaseRoulante.h"
 #include "Pince.h"
-
 #include "Autonome.h"
 
-namespace rbl
-{
+using namespace frc;
+
 
 /*
  * PIDs remarques :
@@ -199,7 +201,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 		break;*/
 
 	default:
-		 //On re-appelle ejecter cube en simulant un bouton relaché pour que la pince s'arrete
+		 //On re-appelle ejecter cube en simulant un bouton relachï¿½ pour que la pince s'arrete
 		break;
 	}
 
@@ -208,7 +210,7 @@ void Autonome::departMilieu(BaseRoulante* base, Pince* pince)
 
 	pince->deplacer();
 
-	//Si un PID est consideré comme fini alors on passe à l'etat suivant et on reset capteurs et variables
+	//Si un PID est considerï¿½ comme fini alors on passe ï¿½ l'etat suivant et on reset capteurs et variables
 	if(etat == 1 || etat == 3 || etat == 6 || etat == 8 || etat == 10 || etat == 14 || etat == 15 || etat == 18 || etat == 20 || etat == 22 || etat == 25 || etat == 27 || etat == 28 || etat == 30 || etat == 32)
 	{
 		if(erreur < toleranceAvancer && erreur > -toleranceAvancer)
@@ -319,7 +321,7 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 
 	//Avancer jusqu'au switch
 	case 5:
-		//Qu'est ce que tu imagine qui ce passe  à cette etape?
+		//Qu'est ce que tu imagine qui ce passe  ï¿½ cette etape?
 		std::cout <<"ejection"<<std::endl;
 		break;
 
@@ -377,11 +379,11 @@ void Autonome::memeCote(BaseRoulante* base, Pince* pince)
 		break;
 	}
 
-	pince->ejecterCube(false); //On appelle ejecter cube en simulant un bouton relaché pour que la pince s'arrete
+	pince->ejecterCube(false); //On appelle ejecter cube en simulant un bouton relachï¿½ pour que la pince s'arrete
 	pince->attraperCubeAuto(false);
 	pince->deplacer();
 
-	//Si un PID est consideré comme fini alors on passe à l'etat suivant et on reset capteurs et variables
+	//Si un PID est considerï¿½ comme fini alors on passe ï¿½ l'etat suivant et on reset capteurs et variables
 	if(etat == 1 || etat==4 || etat==6 || etat==8 || etat==11 || etat==13 || etat==14 || etat==16)
 	{
 		if(erreur < toleranceAvancer && erreur > -toleranceAvancer)
@@ -468,12 +470,12 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 	//Ejecter cube
 	case 6:
 
-		pince->positionVerrin(true); //On simule un bouton appuyé et on passe au suivant
+		pince->positionVerrin(true); //On simule un bouton appuyï¿½ et on passe au suivant
 		etat++;
 		break;
 
 	case 7:
-		pince->goToEchangeur(false); //On simule un bouton appuyé et on passe au suivant
+		pince->goToEchangeur(false); //On simule un bouton appuyï¿½ et on passe au suivant
 		break;
 
 	case 8:
@@ -529,7 +531,7 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 	pince->ejecterCube(false);
 	pince->deplacer();
 
-	//Si un PID est consideré comme fini alors on passe à l'etat suivant et on reset capteurs et variables
+	//Si un PID est considerï¿½ comme fini alors on passe ï¿½ l'etat suivant et on reset capteurs et variables
 	/*if(etat == 1 || etat == 3 || etat == 9 || etat == 14 || etat == 16)
 	{
 		if(erreur < toleranceAvancer && erreur > -toleranceAvancer)
@@ -577,7 +579,5 @@ void Autonome::coteOppose(BaseRoulante* base, Pince* pince)
 
 Autonome::~Autonome()
 {
-
-}
 
 }
